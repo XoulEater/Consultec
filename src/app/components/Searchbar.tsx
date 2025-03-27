@@ -43,13 +43,7 @@ export function Searchbar() {
                         className="bg-[#1450AC] text-white rounded-md px-2 py-[6px] flex items-center gap-2 text-sm  hover:scale-110 hover:opacity-90 transition-all duration-300"
                     >
                         <span className="pointer-events-none">{filter}</span>
-                        <button
-                            onClick={() =>
-                                setFilters((prev) =>
-                                    prev.filter((_, i) => i !== index)
-                                )
-                            }
-                        >
+                        <button>
                             <img
                                 src="cancel.svg"
                                 onClick={() =>
