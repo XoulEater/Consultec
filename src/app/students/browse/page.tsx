@@ -1,5 +1,5 @@
-import { Searchbar } from "../components/Searchbar";
-import { Table } from "../components/Table";
+import { Searchbar } from "@/components/Searchbar";
+import { Table } from "@/components/Table";
 
 export default function Home() {
     return (

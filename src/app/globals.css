@@ -1,5 +1,31 @@
 @import "tailwindcss";
 
+
+/* 
+
+
+main: "#151518", // Text Main Negro
+dim: "#797979", // Text Dim Gris
+light: "#FBFBFB", // Text Light Gris Claro
+primary: "#2071EF", // Primary Azul
+secondary: "#1450AC", // Secondary Azul
+bghover: "#E5EAFE", // Background Hover Azul Claro
+warning: "#E34850", // Warning Rojo
+   
+ */
+
+@theme {
+    --color-main: #151518;
+    --color-dim: #797979;
+    --color-light: #FBFBFB;
+    --color-primary: #2071EF;
+    --color-secondary: #1450AC;
+    --color-bghover: #E5EAFE;
+    --color-warning: #E34850;
+    --color-input: #E8E8E8;
+}
+
+
 :root {
 
 }
