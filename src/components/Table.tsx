@@ -82,10 +82,10 @@ export function Table() {
                 p-3 px-5  bg-[#F7F7F7] font-semibold rounded-t-md"
                 >
                     {/* Headers */}
-                    <div className=" text-[#797979] ">Impartido por</div>
-                    <div className=" text-[#797979] ">Escuela/Catedra</div>
-                    <div className=" text-[#797979] ">Disponibilidad</div>
-                    <div className=" text-[#797979] ">Ultima Acualización</div>
+                    <div className=" text-dim ">Impartido por</div>
+                    <div className=" text-dim ">Escuela/Catedra</div>
+                    <div className=" text-dim ">Disponibilidad</div>
+                    <div className=" text-dim ">Ultima Acualización</div>
                 </div>
                 {/* Data */}
                 {teachers.map((teacher, index) => (
@@ -101,15 +101,15 @@ export function Table() {
                                     key={index}
                                     className={`${
                                         day === 1
-                                            ? "bg-[#7498FA]"
-                                            : "bg-[#E5EAFE] opacity-50"
+                                            ? "bg-primary/50"
+                                            : "bg-bghover opacity-50"
                                     } rounded-md font-semibold flex items-center pointer-events-none justify-center h-6 w-6  text-sm`}
                                 >
                                     {days[index]}
                                 </span>
                             ))}
                         </div>
-                        <div className="text-[#797979] ">
+                        <div className="text-dim ">
                             <span className="font-semibold">
                                 {teacher.lastUpdate.toLocaleString("es-ES", {
                                     month: "short", // Abbreviated month (e.g., "Oct")
