@@ -1,5 +1,5 @@
- import { Searchbar } from "../components/Searchbar";
-import { Information } from "../components/Information";
+import { Searchbar } from "@/components/Searchbar";
+import {Information} from "@/components/Information";
 
 
 

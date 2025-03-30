@@ -1,5 +1,5 @@
- import { Searchbar } from "../components/Searchbar";
-import { SearchResult } from "../components/SearchResult";
+import { Searchbar } from "@/components/Searchbar";
+import { SearchResult } from "@/components/SearchResult";
 
 
 

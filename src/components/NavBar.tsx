@@ -1,10 +1,7 @@
 "use client";
-<<<<<<< HEAD:src/app/components/NavBar.tsx
 import { useState } from "react";
-=======
 
 import Link from "next/link";
->>>>>>> 6f18067bad88835ba354efc04c98168286939414:src/components/NavBar.tsx
 
 export function NavBar() {
     // to do : dependiendo de la ruta y de la validacion mostrar opciones de administrador o de usuario
@@ -21,14 +18,10 @@ export function NavBar() {
 
             {/* nav options */}
             <section className="w-full flex flex-col gap-2 ">
-<<<<<<< HEAD:src/app/components/NavBar.tsx
                 <button className="flex items-center gap-2 py-2 cursor-pointer px-4 w-full bg-[#E5EAFE] rounded-md transition-all duration-300 ease-in-out group"
                     onClick={() => (window.location.href = "/Information")}
                 >
                 
-=======
-                <button className="flex items-center gap-2 py-2 cursor-pointer px-4 w-full bg-bghover rounded-md transition-all duration-300 ease-in-out group">
->>>>>>> 6f18067bad88835ba354efc04c98168286939414:src/components/NavBar.tsx
                     <div className="w-5 h-5 flex items-center justify-center rounded-sm group-hover:translate-x-2 transition-transform duration-400 ease-in-out">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
