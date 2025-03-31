@@ -1,9 +1,12 @@
 "use client";
+import { useState } from "react";
 
 import { useRouter } from "next/navigation"; // Importa useRouter
 import Link from "next/link";
 
 export function NavBar() {
+    // to do : dependiendo de la ruta y de la validacion mostrar opciones de administrador o de usuario
+    const [role, setRole] = useState("admin"); // "admin" or "user"
     const router = useRouter(); // Initialize router
 
     const onMathClick = () => {
@@ -38,7 +41,10 @@ export function NavBar() {
 
             {/* nav options */}
             <section className="w-full flex flex-col gap-2 ">
-                <button className="flex items-center gap-2 py-2 cursor-pointer px-4 w-full bg-bghover rounded-md transition-all duration-300 ease-in-out group">
+                <button
+                    className="flex items-center gap-2 py-2 cursor-pointer px-4 w-full bg-[#E5EAFE] rounded-md transition-all duration-300 ease-in-out group"
+                    onClick={() => (window.location.href = "/Information")}
+                >
                     <div className="w-5 h-5 flex items-center justify-center rounded-sm group-hover:translate-x-2 transition-transform duration-400 ease-in-out">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -96,6 +102,37 @@ export function NavBar() {
                         Matemática
                     </span>
                 </button>
+
+                {window.location.pathname === "/Information" && (
+                    <button className="flex items-center gap-2 py-2 cursor-pointer px-4 w-full hover:bg-[#E5EAFE] rounded-md transition-all duration-300 ease-in-out text-[#797979]  hover:text-black group">
+                        <div className="w-5 h-5  flex items-center justify-center rounded-sm group-hover:translate-x-2 transition-transform duration-400 ease-in-out">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                width="22"
+                                height="22"
+                                strokeWidth="2"
+                            >
+                                {" "}
+                                <path d="M4 3m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>{" "}
+                                <path d="M8 7m0 1a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1v1a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1z"></path>{" "}
+                                <path d="M8 14l0 .01"></path>{" "}
+                                <path d="M12 14l0 .01"></path>{" "}
+                                <path d="M16 14l0 .01"></path>{" "}
+                                <path d="M8 17l0 .01"></path>{" "}
+                                <path d="M12 17l0 .01"></path>{" "}
+                                <path d="M16 17l0 .01"></path>{" "}
+                            </svg>
+                        </div>
+                        <span className="font-semibold text-lg group-hover:translate-x-2 transition-transform duration-400 ease-in-out">
+                            Información
+                        </span>
+                    </button>
+                )}
             </section>
         </div>
     );

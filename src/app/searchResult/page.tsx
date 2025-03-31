@@ -1,5 +1,5 @@
 import { Searchbar } from "@/components/Searchbar";
-import { Table } from "@/components/Table";
+import { SearchResult } from "@/components/SearchResult";
 
 
 
@@ -8,8 +8,8 @@ export default function Home() {
         <div className=" flex flex-col gap-6">
             <Searchbar />
             <hr className="border-t border-[#E8E8E8]" />
-            <Table />
+            < SearchResult />
         </div>
     );   
         
-}
+} 
