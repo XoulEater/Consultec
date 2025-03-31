@@ -1,8 +1,31 @@
 "use client";
 
+import { useRouter } from "next/navigation"; // Importa useRouter
 import Link from "next/link";
 
 export function NavBar() {
+    const router = useRouter(); // Initialize router
+
+    const onMathClick = () => {
+        sessionStorage.setItem(
+            "filters",
+            JSON.stringify([
+                {
+                    name: "school",
+                    value: "Escuela de Matemática",
+                    label: "Escuela de Matemática",
+                },
+            ])
+        );
+        router.push("/students/browse?school=Escuela+de+Matemática"); // Redirige a la página de búsqueda con los filtros aplicados
+    };
+
+    const onCustomClick = () => {
+        sessionStorage.setItem("filters", JSON.stringify([])); // Guarda los filtros en sessionStorage
+
+        router.push("/students"); // Redirige a la página de búsqueda sin filtros
+    };
+
     return (
         <div className="w-[330px] border border-r-2 border-gray-100 flex-col items-center  gap-6 p-6 hidden lg:flex">
             <Link href="/students">
@@ -34,7 +57,10 @@ export function NavBar() {
                             <path d="M15 4h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" />
                         </svg>
                     </div>
-                    <span className="font-semibold text-lg group-hover:translate-x-2 transition-transform duration-400 ease-in-out">
+                    <span
+                        className="font-semibold text-lg group-hover:translate-x-2 transition-transform duration-400 ease-in-out"
+                        onClick={onCustomClick}
+                    >
                         Personalizada
                     </span>
                 </button>
@@ -63,7 +89,10 @@ export function NavBar() {
                             <path d="M16 17l0 .01"></path>{" "}
                         </svg>
                     </div>
-                    <span className="font-semibold text-lg group-hover:translate-x-2 transition-transform duration-400 ease-in-out">
+                    <span
+                        className="font-semibold text-lg group-hover:translate-x-2 transition-transform duration-400 ease-in-out"
+                        onClick={onMathClick}
+                    >
                         Matemática
                     </span>
                 </button>
