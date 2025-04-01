@@ -25,4 +25,6 @@ warning: "#E34850", // Warning Rojo
     --color-input: #E8E8E8;
 }
 
-
+.bg-gradient {
+    @apply bg-gradient-to-br from-primary to-secondary text-white
+}

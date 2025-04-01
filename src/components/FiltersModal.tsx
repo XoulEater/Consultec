@@ -21,6 +21,13 @@ const schools = [
         ],
     },
 ];
+const campus = [
+    { id: 1, name: "Cartago" },
+    { id: 2, name: "Alajuela" },
+    { id: 3, name: "San José" },
+    { id: 4, name: "San Carlos" },
+    { id: 5, name: "Limón" },
+];
 
 export default function FiltersModal({ onClose, onOk, filters }: Props) {
     const [selectedModality, setSelectedModality] = useState("Cualquiera");
@@ -31,6 +38,7 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
     const [selectedCathedra, setSelectedCathedra] = useState<
         Cathedra | undefined
     >();
+    const [selectedCampus, setSelectedCampus] = useState<string>("");
 
     // Si se pasan filtros, inicializa el estado con esos filtros
     useEffect(() => {
@@ -46,6 +54,9 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
             );
             const daysFilter = filters.filters.find(
                 (filter) => filter.name === "days"
+            );
+            const campusFilter = filters.filters.find(
+                (filter) => filter.name === "campus"
             );
             const schoolFilter = filters.filters.find(
                 (filter) => filter.name === "school"
@@ -67,20 +78,24 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
             if (daysFilter) {
                 setSelectedDays(daysFilter.value.split(","));
             }
+            if (campusFilter) {
+                setSelectedCampus(campusFilter.value);
+            }
             if (schoolFilter) {
                 const schoolName = schoolFilter.value;
-                const school = schools.find((s) => s.name === schoolName);
+                var school = schools.find((s) => s.name === schoolName);
                 setSelectedSchool(school || undefined);
             }
-            if (cathedraFilter && selectedSchool) {
+            console.log(cathedraFilter);
+            if (cathedraFilter && school) {
                 const cathedraName = cathedraFilter.value;
-                const cathedra = selectedSchool.cathedras.find(
+                const cathedra = school.cathedras.find(
                     (c) => c.name === cathedraName
                 );
                 setSelectedCathedra(cathedra || undefined);
             }
         }
-    }, [filters]);
+    }, []);
 
     const modalRef = useRef<HTMLDivElement>(null);
 
@@ -134,6 +149,13 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
                 label: selectedDays.join(", "),
             });
         }
+        if (selectedCampus) {
+            filters.push({
+                name: "campus",
+                value: selectedCampus,
+                label: selectedCampus,
+            });
+        }
 
         if (selectedSchool) {
             filters.push({
@@ -159,11 +181,11 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
         <>
             <div
                 ref={modalRef}
-                className=" h-5/6 w-2/5  absolute inset-1/2 z-50 flex items-center justify-center  -translate-1/2  "
+                className=" h-11/12 w-4/5 lg:h-5/6 lg:w-2/5 fixed  inset-1/2 z-50 flex items-center justify-center  -translate-1/2  "
             >
                 <div className="bg-white rounded-xl h-full w-full flex flex-col p-4 ">
                     <header>
-                        <div className="flex justify-between items-center py-6 px-2 border-b-2 border-gray-200">
+                        <div className="flex justify-between items-center pb-5 px-2 border-b-2 border-gray-200">
                             <h1 className="text-xl font-semibold">Filtros</h1>
                             <button
                                 className=" rounded-sm e cursor-pointer hover:scale-110 hover:opacity-90 transition-all duration-300"
@@ -420,9 +442,28 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
                                 ))}
                             </ul>
                         </section>
+                        {/* Campus select */}
+                        <section className="flex flex-col gap-3 py-6 border-b-2 px-4 border-gray-200">
+                            <h2 className="text-lg font-semibold">Campus</h2>
+                            <select
+                                className="w-1/2 p-3 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer focus:outline-primary"
+                                value={selectedCampus}
+                                onChange={(e) =>
+                                    setSelectedCampus(e.target.value)
+                                }
+                            >
+                                <option value="">Selecciona un campus</option>
+                                {campus.map((campus) => (
+                                    <option key={campus.id} value={campus.name}>
+                                        {campus.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </section>
+
                         {/* Escuela y catedra selects */}
 
-                        <section className="flex flex-col gap-3 py-6 border-b-2 px-4 border-gray-200">
+                        <section className="flex flex-col gap-3 py-6  px-4 ">
                             <h2 className="text-lg font-semibold">Escuela</h2>
                             <select
                                 className="w-1/2 p-3 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer focus:outline-primary"
@@ -483,9 +524,9 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
                         </section>
                     </main>
                     <footer>
-                        <div className="flex justify-between items-center py-6 px-2 border-t-2 border-gray-200">
+                        <div className="flex justify-between items-center pt-5 pb-1 px-2 border-t-2 border-gray-200">
                             <button
-                                className="bg-secondary text-white rounded-md py-2 px-4 cursor-pointer hover:scale-110 hover:opacity-90 transition-all duration-300"
+                                className="bg-gradient rounded-md py-2 px-4 cursor-pointer hover:scale-110 hover:opacity-90 transition-all duration-300"
                                 onClick={handleApplyFilters}
                             >
                                 Aplicar Filtros
@@ -500,7 +541,7 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
                     </footer>
                 </div>
             </div>
-            <div className="fixed inset-0 bg-black/30 z-10" />
+            <div className="fixed inset-0 bg-black/30 z-40" />
         </>
     );
 }

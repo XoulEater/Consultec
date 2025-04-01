@@ -6,9 +6,9 @@ export default function Layout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className="flex flex-row w-full">
+        <div className="flex lg:flex-row w-full flex-col ">
             <NavBar />
-            <div className="h-screen overflow-y-auto flex-grow p-6">
+            <div className="md:h-screen overflow-y-auto pt-20 lg:pt-6 flex-grow p-6">
                 {children}
             </div>
         </div>

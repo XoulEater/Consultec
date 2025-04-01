@@ -74,7 +74,7 @@ export function Searchbar() {
                 />
             )}
             {/* Searchbar */}
-            <section className="align-middle flex items-center relative gap-2 h-12 w-[620px]">
+            <section className="align-middle flex items-center relative gap-2 h-12  lg:max-w-[620px]">
                 <button
                     className="absolute left-0 py-2 px-3 my-1 border-r-1 border-dim cursor-pointer"
                     onClick={onSearch} // Llama a la función de búsqueda
@@ -91,7 +91,7 @@ export function Searchbar() {
                     className="w-[600px] p-3 pl-14 bg-input border-0 rounded-sm focus:outline-secondary"
                 />
                 <button
-                    className="bg-secondary rounded-sm flex items-center justify-center h-full aspect-square cursor-pointer hover:scale-110 hover:opacity-90 transition-all duration-300"
+                    className="bg-gradient rounded-sm flex items-center justify-center h-full aspect-square cursor-pointer hover:scale-110 hover:opacity-90 transition-all duration-300"
                     onClick={() => {
                         setShowDialog(true);
                     }}
@@ -99,21 +99,34 @@ export function Searchbar() {
                     <img src="/filters.svg" className="w-5" alt="" />
                 </button>
             </section>
-            <section className="flex flex-row flex-wrap justify-start gap-3 w-[620px]">
+            <section className="flex flex-row flex-wrap justify-start gap-3 max-w-[620px]">
                 {/* Active Filters */}
                 {filterLabels.map((filter, index) => (
                     <span
                         key={index}
-                        className="bg-secondary text-white rounded-md px-2 py-[6px] flex items-center gap-2 text-sm hover:scale-110 hover:opacity-90 transition-all duration-300"
+                        className="bg-primary text-white group relative rounded-md px-2 py-[6px] flex items-center gap-2 text-sm hover:bg-gray-500 transition-all duration-300 overflow-hidden hover:justify-center"
                     >
-                        <span className="pointer-events-none">{filter}</span>
-                        <button>
-                            <img
-                                className="cursor-pointer"
-                                src="/cancel.svg"
-                                onClick={() => onRemoveFilter(index)}
-                            ></img>
-                        </button>
+                        <div className="translate-x-0 opacity-100 transition group-hover:-translate-x-[150%] group-hover:opacity-0">
+                            {filter}
+                        </div>
+                        <div
+                            className="absolute translate-x-[150%] opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100 cursor-pointer"
+                            onClick={() => onRemoveFilter(index)}
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                width="20"
+                                height="20"
+                                strokeWidth="2"
+                            >
+                                {" "}
+                                <path d="M18 6l-12 12"></path>{" "}
+                                <path d="M6 6l12 12"></path>{" "}
+                            </svg>
+                        </div>
                     </span>
                 ))}
                 <button
