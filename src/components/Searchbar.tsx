@@ -9,6 +9,7 @@ export function Searchbar() {
     const [showDialog, setShowDialog] = useState(false);
     const [filters, setFilters] = useState<FilterList>();
     const [filterLabels, setFilterLabels] = useState<string[]>([]);
+    const [query, setQuery] = useState<string>(""); // Estado para almacenar la consulta de búsqueda
 
     useEffect(() => {
         const storedFilters = sessionStorage.getItem("filters"); // Intenta obtener los filtros del sessionStorage
@@ -52,14 +53,16 @@ export function Searchbar() {
 
     const onSearch = () => {
         const url = filters ? filters.getURL() : ""; // Obtiene la URL de los filtros
+        const queryParam = query ? `&query=${query}` : ""; // Agrega el parámetro de consulta si existe
+        const urlWithQuery = `${url}${queryParam}`; // Combina la URL de los filtros con el parámetro de consulta
 
         // Si la url actual contiene "browse", redirige a la página de búsqueda con los filtros aplicados
         if (window.location.href.includes("browse")) {
-            router.push(`?${url}`);
+            router.push(`?${urlWithQuery}`);
             return;
         }
         if (window.location.href.includes("students")) {
-            router.push(`students/browse?${url}`);
+            router.push(`students/browse?${urlWithQuery}`);
             return;
         }
     };
@@ -89,6 +92,7 @@ export function Searchbar() {
                     type="text"
                     placeholder="Buscar profesores..."
                     className="w-[600px] p-3 pl-14 bg-input border-0 rounded-sm focus:outline-secondary"
+                    onChange={(e) => setQuery(e.target.value)} // Actualiza la consulta de búsqueda
                 />
                 <button
                     className="bg-gradient rounded-sm flex items-center justify-center h-full aspect-square cursor-pointer hover:scale-110 hover:opacity-90 transition-all duration-300"

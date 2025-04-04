@@ -13,7 +13,6 @@ export default function Home() {
             startm: 5,
             duration: 3,
         },
-
         {
             day: 2,
             starth: 8,
