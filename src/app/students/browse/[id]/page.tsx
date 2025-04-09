@@ -1,47 +1,23 @@
 "use client";
 import { useParams } from "next/navigation";
 
-const days = ["L", "K", "M", "J", "V", "S", "D"];
+const days = ["L", "K", "M", "J", "V", "S"];
 
 export default function Home() {
     const { id } = useParams();
 
     const horario = [
         {
-            day: 1,
-            starth: 7,
-            startm: 5,
-            duration: 3,
-        },
-        {
             day: 2,
-            starth: 8,
-            startm: 0,
-            duration: 3,
-        },
-        {
-            day: 3,
-            starth: 9,
-            startm: 0,
-            duration: 1,
-        },
-        {
-            day: 4,
-            starth: 10,
-            startm: 0,
+            starth: 7,
+            startm: 3,
             duration: 2,
         },
         {
-            day: 5,
-            starth: 11,
-            startm: 0,
-            duration: 1,
-        },
-        {
-            day: 6,
-            starth: 12,
-            startm: 0,
-            duration: 4,
+            day: 4,
+            starth: 7,
+            startm: 3,
+            duration: 2,
         },
     ];
 
@@ -51,11 +27,11 @@ export default function Home() {
                 <button className="">atras</button>
                 <h1 className="">Profesor{id}</h1>
             </header>
-            <hr className="" />
+            <hr className="border-hr" />
             <main>
                 {/* Calendario semanal */}
                 <div>
-                    <div className="grid grid-cols-7 md:ml-14 ml-[18px]   justify-items-center">
+                    <div className="grid grid-cols-6 md:ml-14 ml-[18px]   justify-items-center">
                         <span>
                             L<span className="hidden md:inline">unes</span>
                         </span>
@@ -65,7 +41,6 @@ export default function Home() {
                         <span>
                             M<span className="hidden md:inline">iércoles</span>
                         </span>
-
                         <span>
                             J<span className="hidden md:inline">ueves</span>
                         </span>
@@ -74,20 +49,16 @@ export default function Home() {
                         </span>
                         <span>
                             S<span className="hidden md:inline">ábado</span>
-                        </span>
-
-                        <span>
-                            D<span className="hidden md:inline">omingo</span>
-                        </span>
+                        </span>{" "}
                     </div>
                 </div>
 
                 <div className="relative h-[84vh] overflow-y-auto">
-                    <div className="absolute grid grid-cols-[18px_1fr_1fr_1fr_1fr_1fr_1fr_1fr]  md:grid-cols-[56px_1fr_1fr_1fr_1fr_1fr_1fr_1fr] grid-rows-[repeat(15,12px)] gap-0 z-10  w-full  ">
+                    <div className="absolute grid grid-cols-[18px_1fr_1fr_1fr_1fr_1fr_1fr]  md:grid-cols-[56px_1fr_1fr_1fr_1fr_1fr_1fr] grid-rows-[repeat(15,12px)] gap-0 z-10  w-full  ">
                         {horario.map((horario, index) => (
                             <div
                                 key={index}
-                                className="bg-primary/90 m-[1px] text-white p-2 text-xs "
+                                className="bg-primary/90 m-[2px] text-white p-2 text-xs "
                                 style={{
                                     gridColumnStart: `${horario.day + 1}`,
                                     gridRowStart: `${
@@ -103,6 +74,14 @@ export default function Home() {
                                         {horario.starth +
                                             ":" +
                                             horario.startm +
+                                            "0"}{" "}
+                                        -{" "}
+                                        {horario.starth +
+                                            horario.duration +
+                                            ":" +
+                                            (horario.startm === 0
+                                                ? 5
+                                                : horario.startm - 1) +
                                             "0"}
                                     </span>
                                 </div>
@@ -110,7 +89,7 @@ export default function Home() {
                         ))}
                     </div>
 
-                    <div className="grid grid-cols-[18px_1fr_1fr_1fr_1fr_1fr_1fr_1fr]  md:grid-cols-[56px_1fr_1fr_1fr_1fr_1fr_1fr_1fr] gap-0  ">
+                    <div className="grid grid-cols-[18px_1fr_1fr_1fr_1fr_1fr_1fr]  md:grid-cols-[56px_1fr_1fr_1fr_1fr_1fr_1fr] gap-0  ">
                         {[...Array(15)].map((_, hour) => (
                             <>
                                 <span className="text-sm h-3 justify-self-end mr-1 -mt-1">
@@ -119,7 +98,7 @@ export default function Home() {
                                         :00
                                     </span>
                                 </span>
-                                {[...Array(7).fill(null)].map((_, index) => (
+                                {[...Array(6).fill(null)].map((_, index) => (
                                     <span
                                         onClick={() =>
                                             console.log(
@@ -127,8 +106,8 @@ export default function Home() {
                                             )
                                         }
                                         key={`${days[index]}(${7 + hour}:00)`}
-                                        className={`h-3 border-t border-x border-gray-200 hover:bg-red-200 ${
-                                            index > 4 ? "bg-gray-100" : ""
+                                        className={`h-3 border-t border-x border-hr  ${
+                                            index > 4 ? "bg-bghover" : ""
                                         }`}
                                     ></span>
                                 ))}
@@ -136,7 +115,7 @@ export default function Home() {
                                 {[...Array(4)].map((_, rowIndex) => (
                                     <>
                                         <span></span>
-                                        {[...Array(7).fill(null)].map(
+                                        {[...Array(6).fill(null)].map(
                                             (_, index) => (
                                                 <span
                                                     onClick={() =>
@@ -149,9 +128,9 @@ export default function Home() {
                                                     key={`${days[index]}(${
                                                         7 + hour
                                                     }-${rowIndex + 1}0)`}
-                                                    className={`h-3 border-x border-gray-200 hover:bg-red-200 ${
+                                                    className={`h-3 border-x border-hr  ${
                                                         index > 4
-                                                            ? "bg-gray-100"
+                                                            ? "bg-bghover"
                                                             : ""
                                                     }`}
                                                 ></span>
@@ -160,7 +139,7 @@ export default function Home() {
                                     </>
                                 ))}
                                 <span></span>
-                                {[...Array(7).fill(null)].map((_, index) => (
+                                {[...Array(6).fill(null)].map((_, index) => (
                                     <span
                                         onClick={() =>
                                             console.log(
@@ -168,8 +147,8 @@ export default function Home() {
                                             )
                                         }
                                         key={`${days[index]}(${7 + hour}:50)`}
-                                        className={`h-3 border-b border-x border-gray-200 hover:bg-red-200 ${
-                                            index > 4 ? "bg-gray-100" : ""
+                                        className={`h-3 border-b border-x border-hr  ${
+                                            index > 4 ? "bg-bghover" : ""
                                         }`}
                                     ></span>
                                 ))}

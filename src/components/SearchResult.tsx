@@ -120,16 +120,16 @@ export function SearchResult() {
                             <div>{teacher.teacher}</div>
                             <div>{teacher.school}</div>
                             <div className="gap-1 flex">
-                                {teacher.availability.map((day, index) => (
+                                {teacher.availability.map((day, dayIndex) => (
                                     <span
-                                        key={index}
+                                        key={`${teacher.teacher}-${dayIndex}`}
                                         className={`${
                                             day === 1
                                                 ? "bg-[#7498FA]"
                                                 : "bg-[#E5EAFE] opacity-50"
                                         } rounded-md font-semibold flex items-center pointer-events-none justify-center h-6 w-6 text-sm`}
                                     >
-                                        {days[index]}
+                                        {days[dayIndex]}
                                     </span>
                                 ))}
                             </div>

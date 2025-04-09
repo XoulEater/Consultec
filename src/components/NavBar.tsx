@@ -32,10 +32,10 @@ export function NavBar() {
 
     return (
         <>
-            <header className="w-full h-16 bg-white shadow-md flex items-center justify-between px-4 fixed lg:hidden z-10">
+            <header className="w-full h-16 bg-bgmain shadow-md flex items-center justify-between px-4 fixed lg:hidden z-10">
                 <Link href="/students">
                     <img
-                        src="/Consultec.png"
+                        src="/consultec.svg"
                         className="h-8 cursor-pointer hover:scale-110 transition-all duration-300"
                         alt=""
                     />
@@ -52,20 +52,20 @@ export function NavBar() {
 
             {/* Desktop NavBar */}
             <div
-                className={`w-[330px] border border-r-2 border-gray-100 flex-col items-center top-0 -left-[330px] md:mt-0 mt-16 gap-6 p-6 fixed lg:flex lg:static ${
+                className={`w-[330px]  border-r border-hr flex-col items-center top-0 -left-[330px] md:mt-0 mt-16 gap-6 p-6 fixed lg:flex lg:static ${
                     showSidebar ? "translate-x-[330px]" : ""
-                } transition-transform duration-300 ease-in-out h-screen bg-white shadow-md md:z-0 z-20`}
+                } transition-transform duration-300 ease-in-out h-screen bg-bgmain shadow-md lg:z-0 z-20`}
             >
                 <Link href="/students" className="hidden lg:flex">
                     <img
-                        src="/logo.png"
+                        src="/logo.svg"
                         className="h-14 cursor-pointer hover:scale-110 transition-all duration-300"
                         alt=""
                     />
                 </Link>
                 {/* nav options */}
                 <section className="w-full flex flex-col gap-2 ">
-                    <button className="flex items-center gap-2 py-2 cursor-pointer px-4 w-full bg-[#E5EAFE] rounded-md transition-all duration-300 ease-in-out group">
+                    <button className="flex items-center gap-2 py-2 cursor-pointer px-4 w-full text-main bg-bghover rounded-md transition-all duration-300 ease-in-out group">
                         <div className="w-5 h-5 flex items-center justify-center rounded-sm group-hover:translate-x-2 transition-transform duration-400 ease-in-out">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -85,14 +85,14 @@ export function NavBar() {
                             </svg>
                         </div>
                         <span
-                            className="font-semibold text-lg group-hover:translate-x-2 transition-transform duration-400 ease-in-out"
+                            className="font-medium text-lg group-hover:translate-x-2 transition-transform duration-400 ease-in-out"
                             onClick={onCustomClick}
                         >
                             Personalizada
                         </span>
                     </button>
 
-                    <button className="flex items-center gap-2 py-2 cursor-pointer px-4 w-full hover:bg-bghover rounded-md transition-all duration-300 ease-in-out text-dim  hover:text-black group">
+                    <button className="flex items-center gap-2 py-2 cursor-pointer px-4 w-full hover:bg-bghover rounded-md transition-all duration-300 ease-in-out text-dim  hover:text-main group">
                         <div className="w-5 h-5  flex items-center justify-center rounded-sm group-hover:translate-x-2 transition-transform duration-400 ease-in-out">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -117,7 +117,7 @@ export function NavBar() {
                             </svg>
                         </div>
                         <span
-                            className="font-semibold text-lg group-hover:translate-x-2 transition-transform duration-400 ease-in-out"
+                            className="font-medium text-lg group-hover:translate-x-2 transition-transform duration-400 ease-in-out"
                             onClick={onMathClick}
                         >
                             Matemática

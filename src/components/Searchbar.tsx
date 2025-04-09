@@ -79,7 +79,7 @@ export function Searchbar() {
             {/* Searchbar */}
             <section className="align-middle flex items-center relative gap-2 h-12  lg:max-w-[620px]">
                 <button
-                    className="absolute left-0 py-2 px-3 my-1 border-r-1 border-dim cursor-pointer"
+                    className="absolute left-0 py-2 px-3 my-1 border-r-1 border-hr cursor-pointer"
                     onClick={onSearch} // Llama a la función de búsqueda
                 >
                     <img
@@ -107,7 +107,7 @@ export function Searchbar() {
                 {/* Active Filters */}
                 {filterLabels.map((filter, index) => (
                     <span
-                        key={index}
+                        key={`filter-${index}-${filter}`}
                         className="bg-primary text-white group relative rounded-md px-2 py-[6px] flex items-center gap-2 text-sm hover:bg-gray-500 transition-all duration-300 overflow-hidden hover:justify-center"
                     >
                         <div className="translate-x-0 opacity-100 transition group-hover:-translate-x-[150%] group-hover:opacity-0">
@@ -134,7 +134,7 @@ export function Searchbar() {
                     </span>
                 ))}
                 <button
-                    className="bg-transparent rounded-md border-2 border-gray-400 text-gray-400 border-dashed px-2 h-[34px] flex items-center   hover:opacity-50 transition-all duration-300 cursor-pointer"
+                    className="bg-transparent rounded-md border-2 border-gray-500 text-gray-400 border-dashed px-2 h-[34px] flex items-center   hover:opacity-50 transition-all duration-300 cursor-pointer"
                     onClick={() => setShowDialog(true)} // Abre el modal de filtros
                 >
                     <span className="pointer-events-none">

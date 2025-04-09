@@ -4,9 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
     title: "Consultec",
     icons: {
-        icon: "/capiTEC_blue.png",
-        shortcut: "/capiTEC_blue.png",
-        apple: "/capiTEC_blue.png",
+        icon: "/capiTEC.svg",
+        shortcut: "/capiTEC.svg",
+        apple: "/capiTEC.svg",
     },
     description: "Consultec - Encuentra tu profesor ideal",
     keywords: [
