@@ -20,6 +20,7 @@ export default function Layout({
         if (token) {
             setIsLoggedIn(true);
         }
+
         setIsLoading(false);
     }, []);
 

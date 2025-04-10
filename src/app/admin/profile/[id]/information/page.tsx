@@ -1,4 +1,3 @@
-import { Searchbar } from "@/components/Searchbar";
 import { Information } from "@/components/Information";
 
 export default function Home() {

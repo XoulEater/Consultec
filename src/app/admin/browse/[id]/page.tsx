@@ -40,6 +40,14 @@ export default function Schedule() {
             startm: 3,
             duration: 2,
         },
+        {
+            type: "other",
+            subject: "Consejo",
+            day: 1,
+            starth: 7,
+            startm: 3,
+            duration: 4,
+        },
     ];
 
     return (

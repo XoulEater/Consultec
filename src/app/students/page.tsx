@@ -1,6 +1,7 @@
 "use client";
 
 import { Searchbar } from "@/components/Searchbar";
+import { Suspense } from "react";
 
 export default function Home() {
     return (
@@ -18,7 +19,10 @@ export default function Home() {
                     alt="consultec logo"
                 />
             </section>
-            <Searchbar />
+
+            <Suspense fallback={<div>Loading...</div>}>
+                <Searchbar />
+            </Suspense>
         </div>
     );
 }

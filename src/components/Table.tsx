@@ -70,7 +70,7 @@ export function Table() {
     ]);
 
     return (
-        <div className="flex flex-col items-end gap-6">
+        <div className="flex flex-col items-center lg:items-end gap-6">
             <div className="w-full flex flex-col gap-2">
                 <div
                     className=" hidden lg:grid grid-cols-4
@@ -85,7 +85,7 @@ export function Table() {
                 {/* Data */}
                 {teachers.map((teacher, index) => (
                     <Link
-                        className="grid grid-cols-3 lg:grid-cols-4 gap-1 lg:gap-2 p-3 px-5 bg-bghover lg:bg-transparent lg:hover:bg-bghover transition-all duration-300 ease-in-out cursor-pointer"
+                        className="grid grid-cols-3 lg:grid-cols-4 gap-1 lg:gap-2 p-3 px-5 bg-bghover lg:bg-transparent lg:hover:bg-bghover transition-all duration-300 ease-in-out cursor-pointer relative"
                         key={index}
                         href={`browse/${teacher.teacher}`}
                     >
@@ -121,6 +121,10 @@ export function Table() {
                                     hour: "2-digit", // 2-digit hours
                                     minute: "2-digit", // 2-digit minutes
                                 })}
+                        </div>
+
+                        <div className="absolute right-3 bottom-0 lg:top-1/2 lg:-translate-y-1/2">
+                            <img src="/icons/info.svg" alt="edit" />
                         </div>
                     </Link>
                 ))}
