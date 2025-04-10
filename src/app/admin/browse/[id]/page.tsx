@@ -1,26 +1,42 @@
 "use client";
-import { useParams } from "next/navigation";
 import { BackButton } from "@/components/BackButton";
-import type { Schedule } from "@/lib/types";
 import { ReadSchedule } from "@/components/ReadSchedule";
+import { useParams } from "next/navigation";
+import type { Schedule } from "@/lib/types";
 
-export default function Home() {
+export default function Schedule() {
     const { id } = useParams();
 
     const horario: Schedule[] = [
+        // {
+        //     type: "consultation",
+        //     subject: "Matemática",
+        //     day: 2,
+        //     starth: 7,
+        //     startm: 3,
+        //     duration: 2,
+        // },
         {
-            type: "consultation",
+            type: "class",
             subject: "Matemática",
-            day: 2,
+            day: 4,
             starth: 7,
             startm: 3,
             duration: 2,
         },
         {
-            type: "consultation",
-            subject: "Matemática",
+            type: "telecommuting",
+            subject: "Teletrabajo",
+            day: 2,
+            starth: 13,
+            startm: 3,
+            duration: 2,
+        },
+        {
+            type: "other",
+            subject: "Otro",
             day: 4,
-            starth: 7,
+            starth: 13,
             startm: 3,
             duration: 2,
         },
@@ -31,7 +47,7 @@ export default function Home() {
             <header className="flex gap-4 items-center">
                 <BackButton />
                 {/* TODO: Add name */}
-                <h1 className="text-xl font-medium">{id}</h1>
+                <h1 className="text-xl font-medium"></h1>
             </header>
             <hr className="border-hr" />
             <ReadSchedule schedules={horario} />

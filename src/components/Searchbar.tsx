@@ -1,7 +1,6 @@
 "use client";
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // Importa useRouter
+import { useRouter, useSearchParams } from "next/navigation"; // Importa useRouter
 import FiltersModal from "./FiltersModal";
 import { FilterList, FilterType } from "@/lib/types";
 
@@ -11,12 +10,25 @@ export function Searchbar() {
     const [filterLabels, setFilterLabels] = useState<string[]>([]);
     const [query, setQuery] = useState<string>(""); // Estado para almacenar la consulta de búsqueda
 
+    // Get school from url
+    const params = useSearchParams();
+    const school = params.get("school");
+
     useEffect(() => {
         const storedFilters = sessionStorage.getItem("filters"); // Intenta obtener los filtros del sessionStorage
         if (storedFilters) {
             const parsedFilters = JSON.parse(storedFilters); // Parsea los filtros almacenados
             const filterList = new FilterList();
+
             filterList.setFilters(parsedFilters);
+
+            if (school) {
+                filterList.addFilter({
+                    label: school,
+                    value: school,
+                    name: "school",
+                });
+            }
 
             setFilters(filterList); // Actualiza el estado de los filtros
 
@@ -83,7 +95,7 @@ export function Searchbar() {
                     onClick={onSearch} // Llama a la función de búsqueda
                 >
                     <img
-                        src="/search.svg"
+                        src="/icons/search.svg"
                         className="w-5 hover:scale-110 hover:opacity-80 transition-all duration-300"
                         alt=""
                     />
@@ -100,7 +112,7 @@ export function Searchbar() {
                         setShowDialog(true);
                     }}
                 >
-                    <img src="/filters.svg" className="w-5" alt="" />
+                    <img src="/icons/filters.svg" className="w-5" alt="" />
                 </button>
             </section>
             <section className="flex flex-row flex-wrap justify-start gap-3 max-w-[620px]">

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Home() {
     return (
-        <div className="flex flex-col items-center justify-center h-full w-full gap-5 pb-24 absolute top-0 left-0 bg-light">
+        <div className="flex flex-col items-center justify-center h-full w-full gap-5 pb-24 absolute top-0 left-0 bg-bgmain">
             <img
                 className="h-56"
                 src="https://media.tenor.com/MYZgsN2TDJAAAAAM/this-is.gif"

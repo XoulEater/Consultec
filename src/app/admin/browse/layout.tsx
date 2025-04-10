@@ -7,17 +7,17 @@ export default function Layout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className="flex lg:flex-row w-full flex-col ">
-            <NavBar href="/students">
+        <div className="flex flex-row w-full">
+            <NavBar href="/admin/browse">
                 <NavItem
-                    title="Personalizada"
+                    title="Busqueda"
                     icon="/custom.svg"
-                    href="/students"
+                    href="/admin/browse"
                 />
                 <NavItem
-                    title="Matemática"
-                    icon="/math.svg"
-                    href="/students/browse?school=Escuela+de+Matemática"
+                    title="Perfil"
+                    icon="/profile.svg"
+                    href="/admin/profile/self/information"
                 />
             </NavBar>
             <div className="md:h-screen overflow-y-auto pt-20 lg:pt-6 flex-grow p-6">
