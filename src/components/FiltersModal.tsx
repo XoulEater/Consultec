@@ -8,7 +8,7 @@ type Props = {
     onOk: (filters: FilterList) => void;
     filters?: FilterList;
 };
-const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", " Sábado"];
 const schools = [
     {
         id: 1,
