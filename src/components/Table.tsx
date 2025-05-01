@@ -1,74 +1,15 @@
 "use client";
+import { TeachersTable } from "@/lib/types";
 import Link from "next/link";
 import { useState } from "react";
 
 const days = ["L", "K", "M", "J", "V", "S"];
 
-export function Table() {
-    const [teachers, setTeachers] = useState<
-        {
-            lastUpdate: Date;
-            teacher: string;
-            school: string;
-            availability: Number[];
-        }[]
-    >([
-        {
-            lastUpdate: new Date("2023-01-01"),
-            teacher: "Dimitri Ivanovich Mendeleiev",
-            school: "Catedra de Quimica",
-            availability: [1, 0, 1, 0, 1, 0],
-        },
-        {
-            lastUpdate: new Date("2023-02-15"),
-            teacher: "Marie Curie",
-            school: "Catedra de Fisica",
-            availability: [1, 1, 0, 1, 0, 0],
-        },
-        {
-            lastUpdate: new Date("2023-03-10"),
-            teacher: "Albert Einstein",
-            school: "Catedra de Matematicas",
-            availability: [0, 1, 1, 0, 1, 0],
-        },
-        {
-            lastUpdate: new Date("2023-04-05"),
-            teacher: "Isaac Newton",
-            school: "Catedra de Fisica",
-            availability: [1, 0, 0, 1, 1, 0],
-        },
-        {
-            lastUpdate: new Date("2023-05-20"),
-            teacher: "Charles Darwin",
-            school: "Catedra de Biologia",
-            availability: [0, 1, 1, 1, 0, 0],
-        },
-        {
-            lastUpdate: new Date("2023-06-12"),
-            teacher: "Galileo Galilei",
-            school: "Catedra de Astronomia",
-            availability: [1, 1, 0, 0, 1, 0],
-        },
-        {
-            lastUpdate: new Date("2023-07-08"),
-            teacher: "Ada Lovelace",
-            school: "Catedra de Computacion",
-            availability: [0, 1, 1, 1, 1, 0],
-        },
-        {
-            lastUpdate: new Date("2023-08-25"),
-            teacher: "Nikola Tesla",
-            school: "Catedra de Ingenieria",
-            availability: [1, 0, 1, 1, 0, 0],
-        },
-        {
-            lastUpdate: new Date("2023-09-14"),
-            teacher: "Rosalind Franklin",
-            school: "Catedra de Biologia Molecular",
-            availability: [1, 1, 0, 1, 1, 0],
-        },
-    ]);
+interface TableProps {
+    teachers: TeachersTable[];
+}
 
+export function Table({ teachers }: TableProps) {
     return (
         <div className="flex flex-col items-center lg:items-end gap-6">
             <div className="w-full flex flex-col gap-2">
@@ -87,7 +28,7 @@ export function Table() {
                     <Link
                         className="grid grid-cols-3 lg:grid-cols-4 gap-1 lg:gap-2 p-3 px-5 bg-bghover lg:bg-transparent lg:hover:bg-bghover transition-all duration-300 ease-in-out cursor-pointer relative"
                         key={index}
-                        href={`browse/${teacher.teacher}`}
+                        href={`browse/${teacher.id}`}
                     >
                         <div className="lg:col-span-1 col-span-2 line-clamp-1">
                             {teacher.teacher}
@@ -109,18 +50,24 @@ export function Table() {
                         </div>
                         <div className="text-dim lg:block hidden">
                             <span className=" font-semibold">
-                                {teacher.lastUpdate.toLocaleString("es-ES", {
-                                    month: "short", // Abbreviated month (e.g., "Oct")
-                                    day: "2-digit", // Day with leading zero if needed
-                                    year: "numeric", // Full year (e.g., "2024")
-                                })}
+                                {new Date(teacher.lastUpdate).toLocaleString(
+                                    "es-ES",
+                                    {
+                                        month: "short", // Abbreviated month (e.g., "Oct")
+                                        day: "2-digit", // Day with leading zero if needed
+                                        year: "numeric", // Full year (e.g., "2024")
+                                    }
+                                )}
                             </span>
 
                             {", " +
-                                teacher.lastUpdate.toLocaleTimeString("es-ES", {
-                                    hour: "2-digit", // 2-digit hours
-                                    minute: "2-digit", // 2-digit minutes
-                                })}
+                                new Date(teacher.lastUpdate).toLocaleTimeString(
+                                    "es-ES",
+                                    {
+                                        hour: "2-digit", // 2-digit hours
+                                        minute: "2-digit", // 2-digit minutes
+                                    }
+                                )}
                         </div>
 
                         <div className="absolute right-3 bottom-0 lg:top-1/2 lg:-translate-y-1/2">

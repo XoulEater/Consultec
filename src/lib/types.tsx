@@ -53,3 +53,29 @@ export type FilterType = {
     value: string;
     label: string;
 };
+
+export interface Teacher {
+    _id: string;
+    name: string;
+    school: string;
+    campus: string;
+    cathedra: string;
+    oficina: string;
+    correo: string;
+    telefono: string;
+    userID: string;
+    type: Type;
+}
+
+export enum Type {
+    Profesor = "profesor",
+    Tutor = "tutor",
+}
+
+export interface TeachersTable {
+    teacher: string;
+    school: string;
+    availability: number[];
+    id: string;
+    lastUpdate: Date;
+}
