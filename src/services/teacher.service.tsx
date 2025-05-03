@@ -21,7 +21,7 @@ export const getTeachers = async (
 
 export const getTeacherById = async (id: string) => {
     try {
-        const response = await axios.get(`${API_URL}/${id}`);
+        const response = await axios.get<Teacher>(`${API_URL}/${id}`);
         return response.data;
     } catch (error) {
         console.error(`Error fetching teacher with id ${id}:`, error);
