@@ -3,61 +3,42 @@ import { BackButton } from "@/components/BackButton";
 import { ReadSchedule } from "@/components/ReadSchedule";
 import { useParams } from "next/navigation";
 import type { Schedule } from "@/lib/types";
+import { useEffect, useState} from "react";
+import { getScheduleByTeacherId } from "@/services/schedule.service";
 
 export default function Schedule() {
     const { id } = useParams();
+    console.log(id);
+    const teacherId : string = "680f083ea4c49105539a8ffa"
 
-    const horario: Schedule[] = [
-        // {
-        //     type: "consultation",
-        //     subject: "Matemática",
-        //     day: 2,
-        //     starth: 7,
-        //     startm: 3,
-        //     duration: 2,
-        // },
-        {
-            type: "class",
-            subject: "MA1103-Cálculo y algebra lineal",
-            day: 3,
-            starth: 7,
-            startm: 3,
-            duration: 2,
-        },
-        {
-            type: "telecommuting",
-            subject: "Teletrabajo",
-            day: 2,
-            starth: 13,
-            startm: 3,
-            duration: 2,
-        },
-        {
-            type: "class",
-            subject: "MA1103-Cálculo y algebra lineal",
-            day: 4,
-            starth: 13,
-            startm: 3,
-            duration: 2,
-        },
-        {
-            type: "other",
-            subject: "Consejo",
-            day: 1,
-            starth: 7,
-            startm: 3,
-            duration: 4,
-        },
 
-        {
-            type: "other",
-            subject: "Otro",
-            day: 5,
-            starth: 7,
-            startm: 3,
-            duration: 2,
-        },
-    ];
+        /* {
+        type: "consultation" | "class" | "telecommuting" | "other";
+        subject: string;
+        day: number;
+        starth: number;
+        startm: number;
+        duration: number;
+
+        }, */
+
+    const [horario, setHorario] = useState<Schedule[]>([]);
+
+
+    const fetchSchedule = async () => {
+        try {
+            const response = await getScheduleByTeacherId(teacherId) as Schedule[];
+            console.log(response);
+            setHorario(response); // Assuming response.data contains the schedule data
+        } catch (error) {
+            console.error("Error fetching schedule:", error);
+        }
+    }
+    useEffect(() => {
+        fetchSchedule();
+    }
+    , []); // Empty dependency array to run only once on mount
+
 
     return (
         <div className=" flex flex-col gap-2 ">
