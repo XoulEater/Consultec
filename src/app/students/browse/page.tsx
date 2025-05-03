@@ -28,7 +28,7 @@ export default function Home() {
             }
         };
 
-        if (searchParams) fetchTeachers();
+        fetchTeachers();
     }, [searchParams]);
 
     return (
