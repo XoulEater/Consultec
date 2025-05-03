@@ -4,12 +4,10 @@ import { ReadonlyURLSearchParams } from "next/navigation";
 
 const API_URL = "/api/teachers"; // Use relative path for proxy
 
-export const getTeachers = async (
-    params: ReadonlyURLSearchParams
-): Promise<TeachersTable[]> => {
+export const getTeachers = async (params: string): Promise<TeachersTable[]> => {
     try {
         const response = await axios.get<TeachersTable[]>(`${API_URL}/filter`, {
-            params: Object.fromEntries(params.entries()),
+            params: Object.fromEntries(new URLSearchParams(params)),
         });
 
         return response.data;

@@ -8,7 +8,7 @@ export function Searchbar() {
     const [showDialog, setShowDialog] = useState(false);
     const [filters, setFilters] = useState<FilterList>();
     const [filterLabels, setFilterLabels] = useState<string[]>([]);
-    const [query, setQuery] = useState<string>(""); // Estado para almacenar la consulta de búsqueda, inicializado como cadena vacía
+    const [query, setQuery] = useState<string>(""); // Estado para almacenar la consulta de búsqueda
 
     // Get school from url
     const params = useSearchParams();
