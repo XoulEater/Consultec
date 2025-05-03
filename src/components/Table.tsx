@@ -24,6 +24,14 @@ export function Table({ teachers }: TableProps) {
                     <div className=" text-dim ">Ultima Acualización</div>
                 </div>
                 {/* Data */}
+                {teachers.length === 0 && (
+                    <span className="text-center text-dim font-semibold p-3 px-5 bg-bghover rounded-lg">
+                        No se ha encontrado ningun profesor que cumpla con los
+                        criterios de busqueda
+                        <br />
+                        Por favor, intenta con otros criterios de busqueda
+                    </span>
+                )}
                 {teachers.map((teacher, index) => (
                     <Link
                         className="grid grid-cols-3 lg:grid-cols-4 gap-1 lg:gap-2 p-3 px-5 bg-bghover lg:bg-transparent lg:hover:bg-bghover transition-all duration-300 ease-in-out cursor-pointer relative"

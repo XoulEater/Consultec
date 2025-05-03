@@ -8,7 +8,7 @@ export function Searchbar() {
     const [showDialog, setShowDialog] = useState(false);
     const [filters, setFilters] = useState<FilterList>();
     const [filterLabels, setFilterLabels] = useState<string[]>([]);
-    const [query, setQuery] = useState<string>(""); // Estado para almacenar la consulta de búsqueda
+    const [query, setQuery] = useState<string>(""); // Estado para almacenar la consulta de búsqueda, inicializado como cadena vacía
 
     // Get school from url
     const params = useSearchParams();
@@ -28,6 +28,11 @@ export function Searchbar() {
                     value: school,
                     name: "school",
                 });
+            }
+
+            // si hay name en la url, lo agrega al input de busqueda
+            if (params.get("name")) {
+                setQuery(params.get("name") as string); // Actualiza el estado de la consulta de búsqueda
             }
 
             setFilters(filterList); // Actualiza el estado de los filtros
@@ -65,7 +70,7 @@ export function Searchbar() {
 
     const onSearch = () => {
         const url = filters ? filters.getURL() : ""; // Obtiene la URL de los filtros
-        const queryParam = query ? `&query=${query}` : ""; // Agrega el parámetro de consulta si existe
+        const queryParam = query ? `&name=${query}` : ""; // Agrega el parámetro de consulta si existe
         const urlWithQuery = `${url}${queryParam}`; // Combina la URL de los filtros con el parámetro de consulta
 
         // Si la url actual contiene "browse", redirige a la página de búsqueda con los filtros aplicados
@@ -105,6 +110,7 @@ export function Searchbar() {
                     placeholder="Buscar profesores..."
                     className="w-[600px] p-3 pl-14 bg-input border-0 rounded-sm focus:outline-secondary"
                     onChange={(e) => setQuery(e.target.value)} // Actualiza la consulta de búsqueda
+                    value={query} // Establece el valor del input
                 />
                 <button
                     className="bg-gradient rounded-sm flex items-center justify-center h-full aspect-square cursor-pointer hover:scale-110 hover:opacity-90 transition-all duration-300"
