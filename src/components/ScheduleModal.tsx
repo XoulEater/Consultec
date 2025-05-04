@@ -80,6 +80,7 @@ function ScheduleModal({ onClose, onOk, scheduleID }: Props) {
                             <a
                                 className="group relative inline-flex py-2  items-center justify-center overflow-hidden rounded-md bg-primary px-4 font-medium text-neutral-200 duration-70000"
                                 href={schedule.enlaceLugar}
+                                target="_blank"
                             >
                                 <div className="relative inline-flex -translate-x-0 items-center transition group-hover:translate-x-6">
                                     <div className="absolute -translate-x-4 opacity-0 transition group-hover:-translate-x-6 group-hover:opacity-100">

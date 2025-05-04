@@ -7,14 +7,15 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
 export default function Home() {
-    const [teachers, setTeachers] = useState<TeachersTable[]>([]);
-    const [searchParams, setSearchParams] = useState<string>("");
-    const [loading, setLoading] = useState<boolean>(true);
+    const [teachers, setTeachers] = useState<TeachersTable[] | undefined>();
+    const [searchParams, setSearchParams] = useState<string | undefined>();
 
     useEffect(() => {
-        setLoading(true); // Set loading to true before fetching
         const fetchTeachers = async () => {
             try {
+                if (searchParams === undefined) {
+                    return;
+                }
                 const data = await getTeachers(searchParams);
 
                 // TODO: Remove this filter when the backend is ready
@@ -25,17 +26,22 @@ export default function Home() {
                     "Fetched teachers:",
                     data.filter((teacher) => teacher.lastUpdate !== null)
                 ); // Debugging line
-
-                setLoading(false); // Set loading to false after fetching
             } catch (error) {
                 console.error("Failed to fetch teachers:", error);
             }
         };
-        if (searchParams) fetchTeachers();
+
+        fetchTeachers();
     }, [searchParams]);
 
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+            fallback={
+                <div className="flex items-center justify-center pt-10 w-full bg-bgmain">
+                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-secondary"></div>
+                </div>
+            }
+        >
             <SearchParamsWrapper setSearchParams={setSearchParams}>
                 <div className=" flex flex-col gap-6">
                     <header className="flex flex-col gap-4 lg:flex-row justify-between items-start ">
@@ -52,13 +58,8 @@ export default function Home() {
                         </div>
                     </header>
                     <hr className="border-t border-hr" />
-                    {loading ? (
-                        <div className="flex items-center justify-center pt-10 w-full bg-bgmain">
-                            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-secondary"></div>
-                        </div>
-                    ) : (
-                        <Table teachers={teachers} />
-                    )}
+
+                    <Table teachers={teachers} />
                 </div>
             </SearchParamsWrapper>
         </Suspense>

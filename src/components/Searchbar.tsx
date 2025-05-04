@@ -109,7 +109,7 @@ export function Searchbar() {
                 <input
                     type="text"
                     placeholder="Buscar profesores..."
-                    className="w-full lg:max-w-[600px] p-3 pl-14 bg-input border-0 rounded-sm focus:outline-secondary"
+                    className="w-full  md:w-[600px] p-3 pl-14 bg-input border-0 rounded-sm focus:outline-secondary"
                     onChange={(e) => setQuery(e.target.value)} // Actualiza la consulta de búsqueda
                     value={query} // Establece el valor del input
                     onKeyDown={(e) => {
