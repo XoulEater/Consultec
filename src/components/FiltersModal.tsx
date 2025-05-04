@@ -181,9 +181,12 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
         <>
             <div
                 ref={modalRef}
-                className=" h-11/12 w-4/5 lg:h-5/6 lg:w-2/5 fixed  inset-1/2 z-50 flex items-center justify-center  -translate-1/2  "
+                className=" h-11/12 w-full  lg:h-5/6 lg:w-2/5 fixed  inset-1/2 z-50 flex items-center justify-center  -translate-1/2  "
             >
-                <div className="bg-bgmain rounded-xl h-full w-full flex flex-col p-4 ">
+                <div
+                    className="bg-bgmain/50 border-t-4 border-t-primary/90
+                 backdrop-blur-md rounded-xl h-full w-full flex flex-col p-4 "
+                >
                     <header>
                         <div className="flex justify-between items-center pb-5 px-2 border-b-2 border-hr">
                             <h1 className="text-xl font-semibold">Filtros</h1>
@@ -446,7 +449,7 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
                         <section className="flex flex-col gap-3 py-6 border-b-2 px-4 border-hr">
                             <h2 className="text-lg font-semibold">Campus</h2>
                             <select
-                                className="w-1/2 p-3 text-gray-500 bg-bgmain border border-hr rounded-lg cursor-pointer focus:outline-primary"
+                                className="w-full lg:w-1/2 p-3 text-gray-500 bg-bgmain border border-hr rounded-lg cursor-pointer focus:outline-primary"
                                 value={selectedCampus}
                                 onChange={(e) =>
                                     setSelectedCampus(e.target.value)

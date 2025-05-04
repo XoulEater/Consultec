@@ -9,12 +9,27 @@ export type Cathedra = {
 };
 
 export type Schedule = {
+    id: string;
+
     type: "consultation" | "class" | "telecommuting" | "other";
     subject: string;
     day: number;
     starth: number;
     startm: number;
     duration: number;
+};
+
+export type ScheduleDetail = {
+    _id: string;
+    type: "consultation" | "class" | "telecommuting" | "other";
+    curso: string;
+    horaInicio: string;
+    horaFin: string;
+    dia: number;
+    enlaceLugar: string | null;
+    place: string | null;
+    modalidad: string;
+    escuela: string;
 };
 
 export class FilterList {

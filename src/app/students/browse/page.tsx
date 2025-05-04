@@ -7,12 +7,15 @@ import { TeachersTable } from "@/lib/types";
 import { useSearchParams } from "next/navigation";
 
 export default function Home() {
-    const [teachers, setTeachers] = useState<TeachersTable[]>([]);
-    const [searchParams, setSearchParams] = useState<string>("");
+    const [teachers, setTeachers] = useState<TeachersTable[] | undefined>();
+    const [searchParams, setSearchParams] = useState<string | undefined>();
 
     useEffect(() => {
         const fetchTeachers = async () => {
             try {
+                if (searchParams === undefined) {
+                    return;
+                }
                 const data = await getTeachers(searchParams);
 
                 // TODO: Remove this filter when the backend is ready
@@ -32,18 +35,19 @@ export default function Home() {
     }, [searchParams]);
 
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+            fallback={
+                <div className="flex items-center justify-center pt-10 w-full bg-bgmain">
+                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-secondary"></div>
+                </div>
+            }
+        >
             <SearchParamsWrapper setSearchParams={setSearchParams}>
                 <div className=" flex flex-col gap-6">
                     <Searchbar />
                     <hr className="border-t border-hr" />
-                    {teachers.length === 0 ? (
-                        <div className="flex items-center justify-center pt-10 w-full bg-bgmain">
-                            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-secondary"></div>
-                        </div>
-                    ) : (
-                        <Table teachers={teachers} />
-                    )}
+
+                    <Table teachers={teachers} />
                 </div>
             </SearchParamsWrapper>
         </Suspense>

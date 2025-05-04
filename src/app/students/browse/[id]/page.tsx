@@ -19,7 +19,7 @@ export default function Home() {
                 // sleep for 1 second to simulate loading
 
                 const data = await getScheduleByTeacherId(id as string);
-                setSchedule(data as Schedule[]);
+                setSchedule(data);
                 console.log("Fetched schedule:", data); // Debugging line
 
                 setLoading(false); // Set loading to false after fetching
@@ -52,7 +52,6 @@ export default function Home() {
         <div className=" flex flex-col gap-2 ">
             <header className="flex gap-4 items-center">
                 <BackButton />
-                {/* TODO: Add name */}
                 <h1 className="text-xl font-medium">{name}</h1>
             </header>
             <hr className="border-hr" />

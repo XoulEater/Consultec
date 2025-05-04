@@ -23,6 +23,7 @@ export function Searchbar() {
             filterList.setFilters(parsedFilters);
 
             if (school) {
+                console.log("school", school);
                 filterList.addFilter({
                     label: school,
                     value: school,
@@ -94,7 +95,7 @@ export function Searchbar() {
                 />
             )}
             {/* Searchbar */}
-            <section className="align-middle flex items-center relative gap-2 h-12  lg:max-w-[620px]">
+            <section className="align-middle flex items-center relative gap-2 h-12 max-w-full lg:max-w-[620px]">
                 <button
                     className="absolute left-0 py-2 px-3 my-1 border-r-1 border-hr cursor-pointer"
                     onClick={onSearch} // Llama a la función de búsqueda
@@ -108,9 +109,14 @@ export function Searchbar() {
                 <input
                     type="text"
                     placeholder="Buscar profesores..."
-                    className="w-[600px] p-3 pl-14 bg-input border-0 rounded-sm focus:outline-secondary"
+                    className="w-full lg:max-w-[600px] p-3 pl-14 bg-input border-0 rounded-sm focus:outline-secondary"
                     onChange={(e) => setQuery(e.target.value)} // Actualiza la consulta de búsqueda
                     value={query} // Establece el valor del input
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            onSearch(); // Llama a la función de búsqueda al presionar Enter
+                        }
+                    }}
                 />
                 <button
                     className="bg-gradient rounded-sm flex items-center justify-center h-full aspect-square cursor-pointer hover:scale-110 hover:opacity-90 transition-all duration-300"
@@ -121,7 +127,7 @@ export function Searchbar() {
                     <img src="/icons/filters.svg" className="w-5" alt="" />
                 </button>
             </section>
-            <section className="flex flex-row flex-wrap justify-start gap-3 max-w-[620px]">
+            <section className="flex flex-row flex-wrap justify-start gap-3  max-w-full lg:max-w-[620px]">
                 {/* Active Filters */}
                 {filterLabels.map((filter, index) => (
                     <span

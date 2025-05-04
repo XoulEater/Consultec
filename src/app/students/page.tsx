@@ -14,7 +14,7 @@ export default function Home() {
                     alt="capiTEC logo"
                 />
                 <img
-                    src="/logos/consultec.svg"
+                    src="/logos/Consultec.svg"
                     className="w-[400px] "
                     alt="consultec logo"
                 />

@@ -32,9 +32,10 @@ export function NavBar({
             </header>
 
             {/* Desktop NavBar */}
+
             <div
-                className={`w-[330px]  border-r border-hr flex-col items-center top-0 -left-[330px] lg:mt-0 mt-16  gap-6 p-6 fixed lg:flex lg:static ${
-                    showSidebar ? "translate-x-[330px]" : ""
+                className={`border-r border-hr flex-col items-center top-0 -left-[300px] lg:mt-0 mt-16  gap-6 p-6 fixed lg:flex lg:static ${
+                    showSidebar ? "translate-x-[300px]" : ""
                 } transition-transform dura tion-300 ease-in-out h-screen bg-bgmain shadow-md lg:z-0 z-20`}
             >
                 <Link href={href} className="hidden lg:flex">

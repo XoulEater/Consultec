@@ -6,12 +6,20 @@ import { useState } from "react";
 const days = ["L", "K", "M", "J", "V", "S"];
 
 interface TableProps {
-    teachers: TeachersTable[];
+    teachers: TeachersTable[] | undefined;
 }
 
 export function Table({ teachers }: TableProps) {
+    if (teachers === undefined) {
+        return (
+            <div className="flex items-center justify-center pt-10 w-full bg-bgmain">
+                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-secondary"></div>
+            </div>
+        );
+    }
+
     return (
-        <div className="flex flex-col items-center lg:items-end gap-6">
+        <div className="flex flex-col justify-between items-center  gap-6">
             <div className="w-full flex flex-col gap-2">
                 <div
                     className=" hidden lg:grid grid-cols-4
@@ -34,17 +42,17 @@ export function Table({ teachers }: TableProps) {
                 )}
                 {teachers.map((teacher, index) => (
                     <Link
-                        className="grid grid-cols-3 lg:grid-cols-4 gap-1 lg:gap-2 p-3 px-5 bg-bghover lg:bg-transparent lg:hover:bg-bghover transition-all duration-300 ease-in-out cursor-pointer relative"
+                        className="grid grid-cols-2 lg:grid-cols-4 gap-1 lg:gap-2 p-3 px-5 bg-bghover lg:bg-transparent lg:hover:bg-bghover transition-all duration-300 ease-in-out cursor-pointer relative"
                         key={index}
                         href={`browse/${teacher.id}`}
                     >
-                        <div className="lg:col-span-1 col-span-2 line-clamp-1">
+                        <div className="lg:col-span-1  line-clamp-1">
                             {teacher.teacher}
                         </div>
                         <div className="lg:order-none order-3 line-clamp-1 lg:col-span-1 col-span-2 text-sm text-dim lg:text-base lg:text-main">
                             {teacher.school}
                         </div>
-                        <div className=" sm:gap-1 flex overflow-hidden rounded-md sm:rounded-none w-fit h-fit">
+                        <div className=" sm:gap-1 flex overflow-hidden justify-self-end lg:justify-self-auto  rounded-md sm:rounded-none w-fit h-fit">
                             {teacher.availability.map((day, dayIndex) => (
                                 <span
                                     key={`${teacher.teacher}-${dayIndex}`}
@@ -85,97 +93,50 @@ export function Table({ teachers }: TableProps) {
                 ))}
             </div>
             <div>
-                <nav aria-label="Page navigation example">
-                    <ul className="flex items-center -space-x-px h-8 text-sm">
-                        <li>
-                            <a
-                                href="#"
-                                className="flex items-center justify-center px-3 h-8 ms-0 leading-tight bg-bgmain border border-e-0 border-gray-700 rounded-s-lg hover:bg-bghover  "
+                <div className="flex flex-col  items-center">
+                    <span className="text-sm ">
+                        Página <span className="font-semibold">1</span> de{" "}
+                        <span className="font-semibold">10</span>
+                    </span>
+                    <div className="inline-flex mt-2 xs:mt-0">
+                        <button className="flex items-center justify-center px-3 h-8 text-sm font-medium   rounded-s hover:bg-gray-700 bg-bghover border-hr">
+                            <svg
+                                className="w-3.5 h-3.5 me-2 rtl:rotate-180"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 14 10"
                             >
-                                <span className="sr-only">Previous</span>
-                                <svg
-                                    className="w-2.5 h-2.5 rtl:rotate-180"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 6 10"
-                                >
-                                    <path
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M5 1 1 5l4 4"
-                                    />
-                                </svg>
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="#"
-                                className="flex items-center justify-center px-3 h-8 leading-tight  border hover:bg-bghover  border-gray-700 text-gray-400  hover:text-white "
+                                <path
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M13 5H1m0 0 4 4M1 5l4-4"
+                                />
+                            </svg>
+                            Prev
+                        </button>
+                        <button className="flex items-center justify-center px-3 h-8 text-sm font-medium   border-0 border-s  rounded-e  bg-bghover border-hr  hover:bg-gray-700">
+                            Next
+                            <svg
+                                className="w-3.5 h-3.5 ms-2 rtl:rotate-180"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 14 10"
                             >
-                                1
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="#"
-                                className="flex items-center justify-center px-3 h-8 leading-tight  border hover:bg-bghover  border-gray-700 text-gray-400  hover:text-white "
-                            >
-                                2
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="#"
-                                aria-current="page"
-                                className="z-10 flex items-center justify-center px-3 h-8 leading-tight  border hover:border-secondary hover:text-secondary border-gray-700 bg-bghover text-white "
-                            >
-                                3
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="#"
-                                className="flex items-center justify-center px-3 h-8 leading-tight  border hover:bg-bghover  border-gray-700 text-gray-400  hover:text-white "
-                            >
-                                4
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="#"
-                                className="flex items-center justify-center px-3 h-8 leading-tight  border hover:bg-bghover  border-gray-700 text-gray-400hover:text-white "
-                            >
-                                5
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="#"
-                                className="flex items-center justify-center px-3 h-8 leading-tight bg-bgmain border border-gray-700 rounded-e-lg hover:bg-bg  "
-                            >
-                                <span className="sr-only">Next</span>
-                                <svg
-                                    className="w-2.5 h-2.5 rtl:rotate-180"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 6 10"
-                                >
-                                    <path
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="m1 9 4-4-4-4"
-                                    />
-                                </svg>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+                                <path
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M1 5h12m0 0L9 1m4 4L9 9"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );
