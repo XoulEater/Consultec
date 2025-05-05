@@ -10,8 +10,7 @@ export type Cathedra = {
 
 export type Schedule = {
     id: string;
-
-    type: "consultation" | "class" | "telecommuting" | "other";
+    type: "consultation" | "class" | "telecommuting" | "extern";
     subject: string;
     day: number;
     starth: number;
@@ -21,15 +20,15 @@ export type Schedule = {
 
 export type ScheduleDetail = {
     _id: string;
-    type: "consultation" | "class" | "telecommuting" | "other";
-    curso: string;
+    type: "consultation" | "class" | "telecommuting" | "extern";
+    curso: string | null;
     horaInicio: string;
     horaFin: string;
     dia: number;
-    enlaceLugar: string | null;
-    place: string | null;
-    modalidad: string;
-    escuela: string;
+    enlace: string | null;
+    lugar: string | null;
+    modalidad: string | null;
+    escuela: string | null;
 };
 
 export class FilterList {

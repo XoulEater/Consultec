@@ -66,13 +66,13 @@ export function ReadSchedule({ schedules }: { schedules: Schedule[] }) {
                             key={index + schedule.subject}
                             className={`${
                                 schedule.type === "consultation"
-                                    ? "bg-primary/90"
+                                    ? "bg-primary/80 border-blue-400/90"
                                     : schedule.type === "class"
-                                    ? "bg-green-500/90"
+                                    ? "bg-green-400/80 border-green-300/90"
                                     : schedule.type === "telecommuting"
-                                    ? "bg-purple-500/90"
-                                    : "bg-gray-500/90"
-                            } m-[2px] text-white p-2 text-xs`}
+                                    ? "bg-rose-400/80 border-rose-300/90"
+                                    : "bg-gray-400/80 border-gray-300/90"
+                            } m-[2px] text-white p-2  text-xs border-l-8  rounded-l-xs`}
                             style={{
                                 gridColumnStart: `${schedule.day + 1}`,
                                 gridRowStart: `${

@@ -2,6 +2,13 @@ import { Schedule, ScheduleDetail } from "@/lib/types";
 import { getScheduleById } from "@/services/schedule.service";
 import { useEffect, useRef, useState } from "react";
 
+const translateType = {
+    class: "Clase",
+    consultation: "Consulta",
+    telecommuting: "Teletrabajo",
+    extern: "Externo",
+};
+
 type Props = {
     onClose: () => void;
     onOk: () => void;
@@ -50,19 +57,21 @@ function ScheduleModal({ onClose, onOk, scheduleID }: Props) {
         <div className="fixed inset-0 flex items-center justify-center z-50 ">
             <div
                 ref={modalRef}
-                className={`bg-bgmain/80 backdrop-blur-md border-t-4 pb-10 p-6 
+                className={`bg-bgmain/80   backdrop-blur-md border-t-4 pb-10 p-6 
                     ${
                         schedule.type === "consultation"
                             ? "border-primary/90"
                             : schedule.type === "class"
-                            ? "border-green-500/90"
+                            ? "border-green-400/90"
                             : schedule.type === "telecommuting"
-                            ? "border-purple-500/90"
-                            : "border-gray-500/90"
-                    } rounded-md shadow-lg flex flex-col gap-6  w-full max-w-md`}
+                            ? "border-rose-400/90"
+                            : "border-gray-400/90"
+                    } rounded-md ring-black/10 ring-2  flex flex-col gap-6  w-full max-w-md`}
             >
                 <header className="text-xl font-medium flex justify-between">
-                    <span>{`${schedule.type}: ${schedule.curso}`}</span>
+                    <span>{`${translateType[schedule.type]}: ${
+                        schedule.curso
+                    }`}</span>
                     <button
                         className="cursor-pointer"
                         onClick={() => {
@@ -73,13 +82,13 @@ function ScheduleModal({ onClose, onOk, scheduleID }: Props) {
                     </button>
                 </header>
 
-                {schedule.enlaceLugar && (
+                {schedule.enlace && (
                     <>
                         <hr className="border-hr" />
                         <section className="">
                             <a
                                 className="group relative inline-flex py-2  items-center justify-center overflow-hidden rounded-md bg-primary px-4 font-medium text-neutral-200 duration-70000"
-                                href={schedule.enlaceLugar}
+                                href={schedule.enlace}
                                 target="_blank"
                             >
                                 <div className="relative inline-flex -translate-x-0 items-center transition group-hover:translate-x-6">
@@ -110,7 +119,7 @@ function ScheduleModal({ onClose, onOk, scheduleID }: Props) {
                     <div className="flex flex-row gap-4">
                         <img src="/icons/location.svg" alt="" />
                         <span>
-                            {schedule.place}{" "}
+                            {schedule.lugar}{" "}
                             {schedule.modalidad
                                 ? `(${schedule.modalidad})`
                                 : "Virtual"}
