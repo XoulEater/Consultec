@@ -86,6 +86,13 @@ export enum Type {
     Tutor = "tutor",
 }
 
+export interface paginationResponse {
+    teachers: TeachersTable[];
+    pagination: {
+        total_pages: number;
+        actual_page: number;
+    };
+}
 export interface TeachersTable {
     teacher: string;
     school: string;

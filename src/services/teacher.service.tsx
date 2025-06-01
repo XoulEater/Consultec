@@ -1,14 +1,20 @@
 import { Teacher, TeachersTable } from "@/lib/types";
 import axios from "axios";
 import { ReadonlyURLSearchParams } from "next/navigation";
+import { paginationResponse } from "../lib/types";
 
 const API_URL = "/api/teachers"; // Use relative path for proxy
 
-export const getTeachers = async (params: string): Promise<TeachersTable[]> => {
+export const getTeachers = async (
+    params: string
+): Promise<paginationResponse> => {
     try {
-        const response = await axios.get<TeachersTable[]>(`${API_URL}/filter`, {
-            params: Object.fromEntries(new URLSearchParams(params)),
-        });
+        const response = await axios.get<paginationResponse>(
+            `${API_URL}/filter`,
+            {
+                params: Object.fromEntries(new URLSearchParams(params)),
+            }
+        );
 
         return response.data;
     } catch (error) {

@@ -9,6 +9,8 @@ import { Suspense, useEffect, useState } from "react";
 export default function Home() {
     const [teachers, setTeachers] = useState<TeachersTable[] | undefined>();
     const [searchParams, setSearchParams] = useState<string | undefined>();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
         const fetchTeachers = async () => {
@@ -17,15 +19,9 @@ export default function Home() {
                     return;
                 }
                 const data = await getTeachers(searchParams);
-
-                // TODO: Remove this filter when the backend is ready
-                setTeachers(
-                    data.filter((teacher) => teacher.lastUpdate !== null)
-                );
-                console.log(
-                    "Fetched teachers:",
-                    data.filter((teacher) => teacher.lastUpdate !== null)
-                ); // Debugging line
+                setTeachers(data.teachers);
+                setTotalPages(data.pagination.total_pages);
+                setCurrentPage(data.pagination.actual_page);
             } catch (error) {
                 console.error("Failed to fetch teachers:", error);
             }
@@ -33,6 +29,13 @@ export default function Home() {
 
         fetchTeachers();
     }, [searchParams]);
+
+    const handlePageChange = (page: number) => {
+        if (page < 1 || page > totalPages) return;
+        const params = new URLSearchParams(searchParams || "");
+        params.set("page", page.toString());
+        setSearchParams(params.toString());
+    };
 
     return (
         <Suspense
@@ -59,7 +62,12 @@ export default function Home() {
                     </header>
                     <hr className="border-t border-hr" />
 
-                    <Table teachers={teachers} />
+                    <Table
+                        teachers={teachers}
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={handlePageChange}
+                    />
                 </div>
             </SearchParamsWrapper>
         </Suspense>

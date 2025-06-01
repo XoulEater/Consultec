@@ -4,7 +4,12 @@ import { useRouter, useSearchParams } from "next/navigation"; // Importa useRout
 import FiltersModal from "./FiltersModal";
 import { FilterList, FilterType } from "@/lib/types";
 
-export function Searchbar() {
+// props
+interface SearchbarProps {
+    reloadOnFilters?: boolean; // Si se debe recargar la página al aplicar los filtros
+}
+
+export function Searchbar(props: SearchbarProps) {
     const [showDialog, setShowDialog] = useState(false);
     const [filters, setFilters] = useState<FilterList>();
     const [filterLabels, setFilterLabels] = useState<string[]>([]);
@@ -45,6 +50,13 @@ export function Searchbar() {
             ); // Actualiza el estado de los filtros
         }
     }, []); // Solo se ejecuta una vez al cargar el componente
+
+    useEffect(() => {
+        // Si hay filtros en el estado, actualiza el sessionStorage
+        if (filters && !props.reloadOnFilters) {
+            onSearch(); // Llama a la función de búsqueda para actualizar la URL
+        }
+    }, [filters?.filters.length]); // Se ejecuta cada vez que los filtros cambian
 
     const router = useRouter(); // Initialize router
 

@@ -7,9 +7,17 @@ const days = ["L", "K", "M", "J", "V", "S"];
 
 interface TableProps {
     teachers: TeachersTable[] | undefined;
+    currentPage: number;
+    totalPages: number;
+    onPageChange: (page: number) => void;
 }
 
-export function Table({ teachers }: TableProps) {
+export function Table({
+    teachers,
+    currentPage,
+    totalPages,
+    onPageChange,
+}: TableProps) {
     if (teachers === undefined) {
         return (
             <div className="flex items-center justify-center pt-10 w-full bg-bgmain">
@@ -95,11 +103,14 @@ export function Table({ teachers }: TableProps) {
             <div>
                 <div className="flex flex-col  items-center">
                     <span className="text-sm ">
-                        Página <span className="font-semibold">1</span> de{" "}
-                        <span className="font-semibold">10</span>
+                        {`Página ${currentPage} de ${totalPages}`}
                     </span>
                     <div className="inline-flex mt-2 xs:mt-0">
-                        <button className="flex items-center justify-center px-3 h-8 text-sm font-medium   rounded-s hover:bg-gray-700 bg-bghover border-hr">
+                        <button
+                            className="flex items-center justify-center px-3 h-8 text-sm font-medium   rounded-s hover:bg-gray-700 bg-bghover border-hr disabled:opacity-50 disabled:pointer-events-none"
+                            onClick={() => onPageChange(currentPage - 1)}
+                            disabled={currentPage <= 1}
+                        >
                             <svg
                                 className="w-3.5 h-3.5 me-2 rtl:rotate-180"
                                 aria-hidden="true"
@@ -117,7 +128,11 @@ export function Table({ teachers }: TableProps) {
                             </svg>
                             Prev
                         </button>
-                        <button className="flex items-center justify-center px-3 h-8 text-sm font-medium   border-0 border-s  rounded-e  bg-bghover border-hr  hover:bg-gray-700">
+                        <button
+                            className="flex items-center justify-center px-3 h-8 text-sm font-medium   border-0 border-s  rounded-e  bg-bghover border-hr  hover:bg-gray-700 disabled:opacity-50 disabled:pointer-events-none"
+                            onClick={() => onPageChange(currentPage + 1)}
+                            disabled={currentPage >= totalPages}
+                        >
                             Next
                             <svg
                                 className="w-3.5 h-3.5 ms-2 rtl:rotate-180"

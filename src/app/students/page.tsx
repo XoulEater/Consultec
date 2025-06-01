@@ -21,7 +21,7 @@ export default function Home() {
             </section>
 
             <Suspense fallback={<div>Loading...</div>}>
-                <Searchbar />
+                <Searchbar reloadOnFilters={true} />
             </Suspense>
         </div>
     );
