@@ -33,6 +33,7 @@ export default function Home() {
 
     // Helper to update page in search params
     const handlePageChange = (page: number) => {
+        console.log("Changing page to:", page);
         if (page < 1 || page > totalPages) return;
         const params = new URLSearchParams(searchParams || "");
         params.set("page", page.toString());
@@ -48,10 +49,11 @@ export default function Home() {
             }
         >
             <SearchParamsWrapper setSearchParams={setSearchParams}>
-                <div className=" flex flex-col gap-6">
-                    <Searchbar />
-                    <hr className="border-t border-hr" />
-
+                <div className=" flex flex-col gap-6 ">
+                    <section className="flex flex-col gap-6">
+                        <Searchbar />
+                        <hr className="border-t border-hr" />
+                    </section>
                     <Table
                         teachers={teachers}
                         currentPage={currentPage}

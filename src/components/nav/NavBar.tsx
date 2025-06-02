@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export function NavBar({
     children,
@@ -10,6 +10,24 @@ export function NavBar({
     href: string;
 }) {
     const [showSidebar, setShowSidebar] = useState(false); // Estado para controlar la visibilidad de la barra lateral
+    const sidebarRef = useRef<HTMLDivElement>(null);
+
+    // Click outside logic for mobile sidebar
+    useEffect(() => {
+        if (!showSidebar) return;
+        function handleClickOutside(event: MouseEvent) {
+            if (
+                sidebarRef.current &&
+                !sidebarRef.current.contains(event.target as Node)
+            ) {
+                setShowSidebar(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showSidebar]);
 
     return (
         <>
@@ -34,7 +52,8 @@ export function NavBar({
             {/* Desktop NavBar */}
 
             <div
-                className={`border-r border-hr flex-col items-center top-0 -left-[300px] lg:mt-0 mt-16  gap-6 p-6 fixed lg:flex lg:static ${
+                ref={sidebarRef}
+                className={`border-r border-hr flex-col items-center top-0 -left-[300px] lg:mt-0 mt-16  gap-6 lg:p-6 p-2 fixed lg:flex lg:static ${
                     showSidebar ? "translate-x-[300px]" : ""
                 } transition-transform dura tion-300 ease-in-out h-screen bg-bgmain shadow-md lg:z-0 z-20`}
             >

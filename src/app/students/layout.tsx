@@ -22,7 +22,7 @@ export default function Layout({
                     />
                 </NavBar>
             </div>
-            <div className="h-screen w-full overflow-y-clip overflow-x-auto pt-20 lg:pt-6 flex-grow px-1 sm:px-6">
+            <div className="h-screen w-full overflow-x-auto py-6 pt-20 lg:pt-6 px-1 sm:px-6">
                 {children}
             </div>
         </div>

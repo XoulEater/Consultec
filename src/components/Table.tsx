@@ -27,11 +27,11 @@ export function Table({
     }
 
     return (
-        <div className="flex flex-col justify-between items-center  gap-6">
-            <div className="w-full flex flex-col gap-2">
+        <div className="flex flex-col h-full shrink justify-between items-center gap-6">
+            <div className="w-full flex flex-col gap-2 overflow-y-auto">
                 <div
                     className=" hidden lg:grid grid-cols-4
-                p-3 px-5 bg-bghover  font-semibold rounded-t-lg"
+                p-3 px-5 bg-bghover font-semibold rounded-t-lg "
                 >
                     {/* Headers */}
                     <div className=" text-dim ">Impartido por</div>
@@ -41,7 +41,7 @@ export function Table({
                 </div>
                 {/* Data */}
                 {teachers.length === 0 && (
-                    <span className="text-center text-dim font-semibold p-3 px-5 bg-bghover rounded-lg">
+                    <span className="text-center text-dim font-semibold  p-3 px-5 bg-bghover rounded-lg">
                         No se ha encontrado ningun profesor que cumpla con los
                         criterios de busqueda
                         <br />
@@ -60,7 +60,7 @@ export function Table({
                         <div className="lg:order-none order-3 line-clamp-1 lg:col-span-1 col-span-2 text-sm text-dim lg:text-base lg:text-main">
                             {teacher.school}
                         </div>
-                        <div className=" sm:gap-1 flex overflow-hidden justify-self-end lg:justify-self-auto  rounded-md sm:rounded-none w-fit h-fit">
+                        <div className=" sm:gap-1 flex justify-self-end lg:justify-self-auto  rounded-md sm:rounded-none w-fit h-fit">
                             {teacher.availability.map((day, dayIndex) => (
                                 <span
                                     key={`${teacher.teacher}-${dayIndex}`}
@@ -130,7 +130,9 @@ export function Table({
                         </button>
                         <button
                             className="flex items-center justify-center px-3 h-8 text-sm font-medium   border-0 border-s  rounded-e  bg-bghover border-hr  hover:bg-gray-700 disabled:opacity-50 disabled:pointer-events-none"
-                            onClick={() => onPageChange(currentPage + 1)}
+                            onClick={() =>
+                                onPageChange(Number(currentPage) + 1)
+                            }
                             disabled={currentPage >= totalPages}
                         >
                             Next

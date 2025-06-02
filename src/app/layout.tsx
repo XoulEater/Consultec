@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ClientProviders from "./ClientProviders";
 
 export const metadata: Metadata = {
     title: "Consultec",
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
         "instituto tecnológico de costa rica",
     ],
 };
-//hola
+
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -27,7 +28,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="es" className="">
-            <body className="">{children}</body>
+            <body className="">
+                <ClientProviders>{children}</ClientProviders>
+            </body>
         </html>
     );
 }

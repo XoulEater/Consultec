@@ -1,4 +1,4 @@
-import LoginButton from "@/components/admin/LoginButton";
+import LoginForm from "@/components/admin/LoginForm";
 
 export default function Login() {
     return (
@@ -32,20 +32,7 @@ export default function Login() {
                         consultas
                     </p>
 
-                    <div className="flex flex-col gap-3 items-center">
-                        <input
-                            type="text"
-                            placeholder="Usuario"
-                            className="p-3 w-[300px] text-dim  border-1 rounded-lg  border-hr focus:outline-secondary"
-                        />
-                        <input
-                            type="password"
-                            placeholder="Contraseña"
-                            className="p-3  w-[300px] text-dim border-1 rounded-lg  border-hr focus:outline-secondary"
-                        />
-                    </div>
-
-                    <LoginButton />
+                    <LoginForm />
                 </section>
             </main>
         </div>
