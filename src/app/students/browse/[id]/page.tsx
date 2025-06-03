@@ -18,7 +18,8 @@ export default function Home() {
             try {
                 // sleep for 1 second to simulate loading
 
-                const data = await getScheduleByTeacherId(id as string);
+                let data = await getScheduleByTeacherId(id as string);
+                data = data.filter((item) => item.type === "consultation"); // Filter out empty schedules
                 setSchedule(data);
                 console.log("Fetched schedule:", data); // Debugging line
 
