@@ -2,6 +2,7 @@
 import { Searchbar } from "@/components/Searchbar";
 import { Table } from "@/components/Table";
 import { TeachersTable } from "@/lib/types";
+import { getExcelByTeacherId } from "@/services/schedule.service";
 import { getTeachers } from "@/services/teacher.service";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -37,6 +38,15 @@ export default function Home() {
         setSearchParams(params.toString());
     };
 
+    const handleDownloadExcel = async () => {
+        getExcelByTeacherId("680f083ea4c49105539a8ffa")
+            .then(() => {
+                console.log("Excel downloaded successfully");
+            })
+            .catch((error) => {
+                console.error("Error downloading Excel:", error);
+            });
+    };
     return (
         <Suspense
             fallback={
@@ -54,7 +64,10 @@ export default function Home() {
                                 <img src="/icons/addschedule.svg" alt="add" />
                                 <span>Nuevo Horario</span>
                             </button>
-                            <button className="bg-gradient text-white px-4 py-2 rounded-md flex flex-row items-center gap-2 hover:scale-105 transition-all duration-300">
+                            <button
+                                className="bg-gradient text-white px-4 py-2 rounded-md flex flex-row items-center gap-2 hover:scale-105 transition-all duration-300"
+                                onClick={handleDownloadExcel}
+                            >
                                 <img src="/icons/download.svg" alt="add" />
                                 <span>Descargar Horario</span>
                             </button>
