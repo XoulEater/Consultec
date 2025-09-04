@@ -1,7 +1,6 @@
 "use client";
 import { TeachersTable } from "@/lib/types";
 import Link from "next/link";
-import { useState } from "react";
 
 const days = ["L", "K", "M", "J", "V", "S"];
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { DndContext } from "@dnd-kit/core";
-import DraggableEvent from "./weeklyCalendar/DraggableEvent";
+import DraggableEvent from "./DraggableEvent";
 import NewEventModal from "./NewEventModal";
 import { useWeeklyCalendarLogic } from "./useWeeklyCalendarLogic";
 

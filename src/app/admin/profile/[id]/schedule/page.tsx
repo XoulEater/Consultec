@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import type { Schedule } from "@/lib/types";
 import { useEffect, useState} from "react";
 import { getScheduleByTeacherId } from "@/services/schedule.service";
+import WeeklyCalendar from "@/components/InteractiveSchedule";
 
 export default function Schedule() {
     const { id } = useParams();
@@ -48,7 +49,7 @@ export default function Schedule() {
                 <h1 className="text-xl font-medium"></h1>
             </header>
             <hr className="border-hr" />
-            <ReadSchedule schedules={horario} />
+            <WeeklyCalendar  />
         </div>
     );
 }

@@ -6,7 +6,7 @@ import {
     DragEndEvent,
     DragStartEvent,
 } from "@dnd-kit/core";
-import { EventType } from "./weeklyCalendar/DraggableEvent";
+import { EventType } from "./DraggableEvent";
 
 const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 const startHour = 7;
