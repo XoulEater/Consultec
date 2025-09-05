@@ -1,77 +1,146 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
 
-import { EventType } from "./weeklyCalendar/DraggableEvent";
+import { Schedule } from "../lib/types";
+
+const tabs = [
+    { key: "class", label: "Clase" },
+    { key: "consultation", label: "Consulta" },
+    { key: "telecommuting", label: "Teletrabajo" },
+    { key: "other", label: "Otro" },
+];
 
 interface NewEventModalProps {
     show: boolean;
-    newEventData: { day: number; start: number; x: number; y: number } | null;
-    form: any;
-    setForm: React.Dispatch<React.SetStateAction<any>>;
+    newEventData?: {
+        day: number;
+        start: number;
+        x: number;
+        y: number;
+    };
+    editEvent?: Schedule;
     onClose: () => void;
-    onSubmit: (e: React.FormEvent) => void;
+    onSubmit: (data: Schedule) => void;
+    onFormChange?: (data: Partial<Schedule>) => void;
     intervals: number;
-    events: EventType[];
+    events: Schedule[];
 }
 
 const NewEventModal: React.FC<NewEventModalProps> = ({
     show,
     newEventData,
-    form,
-    setForm,
+    editEvent,
     onClose,
     onSubmit,
+    onFormChange,
     intervals,
     events,
 }) => {
-    if (!show) return null;
-
-    // Tabs: class, consultation, telecommuting, other
-    const tabs = [
-        { key: "class", label: "Clase" },
-        { key: "consultation", label: "Consulta" },
-        { key: "telecommuting", label: "Teletrabajo" },
-        { key: "other", label: "Otro" },
+    const subjects = [
+        "Matemáticas",
+        "Física",
+        "Química",
+        "Historia",
+        "Lengua",
+        "Inglés",
+        "Programación",
     ];
 
-    // Si el form no tiene type, default a class
-    const currentType = form.type || "class";
+    // Estado para la duración máxima (debe ir antes de cualquier return)
+    const [maxDuration, setMaxDuration] = React.useState(intervals);
 
-    // Manejar cambio de tab
-    const handleTabChange = (type: string) => {
-        setForm((f: any) => ({
-            ...f,
-            type,
-            // Limpiar campos que no aplican
-            modalidad: undefined,
-            lugar: undefined,
-            enlace: undefined,
-            medio: undefined,
-            curso: undefined,
-        }));
-    };
+    const { register, handleSubmit, setValue, watch, reset } =
+        useForm<Schedule>({
+            defaultValues: {
+                type: "class",
+                subject: "",
+                name: "",
+                day: newEventData?.day ?? 0,
+                start: newEventData?.start ?? 0,
+                duration: 3,
+                location: "",
+                modality: "presencial",
+                link: "",
+            },
+        });
 
-    // Calcular duración máxima posible sin colisión
-    let maxDuration = intervals;
-    if (newEventData && events) {
-        const { day, start } = newEventData;
-        // Buscar el siguiente evento en el mismo día después del inicio
-        const nextEvent = events
-            .filter((ev: EventType) => ev.day === day && ev.start > start)
-            .sort((a: EventType, b: EventType) => a.start - b.start)[0];
-        if (nextEvent) {
-            maxDuration = nextEvent.start - start;
-        } else {
-            maxDuration = intervals - start;
+    // Tabs
+    const currentType = watch("type") || "class";
+    const modalidad = watch("modality") || "presencial";
+    const start = watch("start");
+    const day = watch("day");
+
+    // Live update form values to parent
+    useEffect(() => {
+        if (!show) return;
+        const subscription = watch((values) => {
+            if (onFormChange) {
+                onFormChange(values);
+            }
+        });
+        return () => subscription.unsubscribe();
+    }, [watch, onFormChange, show]);
+
+    useEffect(() => {
+        if (show) {
+            if (editEvent) {
+                reset({
+                    ...editEvent,
+                    day: newEventData?.day ?? editEvent.day,
+                    start: newEventData?.start ?? editEvent.start,
+                });
+            } else {
+                reset({
+                    type: "class",
+                    subject: "",
+                    name: "",
+                    day: newEventData?.day ?? 0,
+                    start: newEventData?.start ?? 0,
+                    duration: 3,
+                    location: "",
+                    modality: "presencial",
+                    link: "",
+                });
+            }
         }
-        // No permitir duración menor a 1
-        if (maxDuration < 1) maxDuration = 1;
-    }
+    }, [show, newEventData, editEvent, reset]);
+
+    // Recalcular duración máxima dinámicamente
+    useEffect(() => {
+        if (events && start !== undefined && day !== undefined) {
+            const nextEvent = events
+                .filter((ev: Schedule) => ev.day === day && ev.start > start)
+                .sort((a: Schedule, b: Schedule) => a.start - b.start)[0];
+            let newMax = intervals;
+            if (nextEvent) {
+                newMax = nextEvent.start - start;
+            } else {
+                newMax = intervals - start;
+            }
+            if (newMax < 1) newMax = 1;
+            setMaxDuration(newMax);
+            // Si la duración actual supera el máximo, ajusta el valor
+            const currentDuration = watch("duration");
+            if (currentDuration > newMax) {
+                setValue("duration", newMax);
+            }
+        }
+    }, [events, start, day, intervals, setValue, watch]);
+
+    if (!show) return null;
+
+    // Tab change
+    const handleTabChange = (type: Schedule["type"]) => {
+        setValue("type", type);
+        // Clear fields not relevant
+        setValue("modality", undefined);
+        setValue("location", undefined);
+        setValue("link", undefined);
+    };
 
     return (
         <>
-            {/* Fondo oscuro */}
             <div className="fixed inset-0 bg-black/20 z-50" onClick={onClose} />
-            {/* Modal posicionado */}
             <form
                 className={`fixed bg-bgmain rounded shadow-md w-[390px] flex flex-col gap-2 z-50 border-t-4 ${
                     currentType === "class"
@@ -90,7 +159,7 @@ const NewEventModal: React.FC<NewEventModalProps> = ({
                         ? Math.min(newEventData.y, window.innerHeight - 350)
                         : 100,
                 }}
-                onSubmit={onSubmit}
+                onSubmit={handleSubmit(onSubmit)}
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Tabs */}
@@ -110,26 +179,25 @@ const NewEventModal: React.FC<NewEventModalProps> = ({
                                         : "bg-gray-500"
                                     : "bg-bghover "
                             }`}
-                            onClick={() => handleTabChange(tab.key)}
+                            onClick={() =>
+                                handleTabChange(tab.key as Schedule["type"])
+                            }
                         >
                             {tab.label}
                         </button>
                     ))}
                 </div>
                 <section className="flex flex-col gap-2 p-4 max-h-[400px] overflow-y-auto">
-                    {/* Campos comunes */}
+                    {/* Common fields */}
+
                     <label>
                         <span className="text-dim">Nombre:</span>
                         <input
                             type="text"
-                            value={form.name || ""}
-                            onChange={(e) =>
-                                setForm((f: any) => ({
-                                    ...f,
-                                    name: e.target.value,
-                                }))
-                            }
-                            className="  w-full text-white border-1 rounded-lg  border-hr focus:outline-secondary p-1 "
+                            placeholder="Nombre del evento"
+                            required
+                            {...register("name")}
+                            className="w-full text-white border-1 rounded-lg border-hr focus:outline-secondary p-1"
                         />
                     </label>
                     <label>
@@ -138,34 +206,40 @@ const NewEventModal: React.FC<NewEventModalProps> = ({
                             type="number"
                             min={1}
                             max={maxDuration}
-                            value={form.duration || 1}
-                            onChange={(e) => {
-                                let val = Number(e.target.value);
-                                if (val > maxDuration) val = maxDuration;
-                                if (val < 1) val = 1;
-                                setForm((f: any) => ({
-                                    ...f,
-                                    duration: val,
-                                }));
-                            }}
-                            className="  w-full text-white border-1 rounded-lg  border-hr focus:outline-secondary p-1 "
+                            {...register("duration", {
+                                valueAsNumber: true,
+                                min: 1,
+                                max: maxDuration,
+                            })}
+                            className="w-full text-white border-1 rounded-lg border-hr focus:outline-secondary p-1"
                         />
                     </label>
 
-                    {/* Formulario por tipo */}
-                    {currentType === "consultation" && (
+                    {/* Fields by type */}
+                    {(currentType === "consultation" ||
+                        currentType === "class") && (
                         <>
+                            <label>
+                                <span className="text-dim">Materia:</span>
+                                <select
+                                    {...register("subject", { required: true })}
+                                    className="w-full p-2 text-gray-500 bg-bgmain border border-hr rounded-lg cursor-pointer focus:outline-secondary"
+                                >
+                                    <option value="">
+                                        Selecciona una materia
+                                    </option>
+                                    {subjects.map((subject) => (
+                                        <option key={subject} value={subject}>
+                                            {subject}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
                             <label>
                                 <span className="text-dim">Modalidad:</span>
                                 <select
-                                    value={form.modalidad || "presencial"}
-                                    onChange={(e) =>
-                                        setForm((f: any) => ({
-                                            ...f,
-                                            modalidad: e.target.value,
-                                        }))
-                                    }
-                                    className="   w-full p-2 text-gray-500 bg-bgmain border border-hr rounded-lg cursor-pointer focus:outline-primary "
+                                    {...register("modality")}
+                                    className="w-full p-2 text-gray-500 bg-bgmain border border-hr rounded-lg cursor-pointer focus:outline-primary"
                                 >
                                     <option value="presencial">
                                         Presencial
@@ -173,128 +247,30 @@ const NewEventModal: React.FC<NewEventModalProps> = ({
                                     <option value="virtual">Virtual</option>
                                 </select>
                             </label>
-                            {form.modalidad === "presencial" && (
+                            {modalidad === "presencial" && (
                                 <label>
                                     <span className="text-dim">Lugar:</span>
                                     <input
                                         type="text"
-                                        value={form.lugar || ""}
-                                        onChange={(e) =>
-                                            setForm((f: any) => ({
-                                                ...f,
-                                                lugar: e.target.value,
-                                            }))
-                                        }
-                                        className="  w-full text-white border-1 rounded-lg  border-hr focus:outline-secondary p-1 "
+                                        {...register("location")}
+                                        className="w-full text-white border-1 rounded-lg border-hr focus:outline-secondary p-1"
                                     />
                                 </label>
                             )}
-                            {form.modalidad === "virtual" && (
-                                <>
-                                    <label>
-                                        <span className="text-dim">
-                                            Enlace (opcional):
-                                        </span>
-                                        <input
-                                            type="text"
-                                            value={form.enlace || ""}
-                                            onChange={(e) =>
-                                                setForm((f: any) => ({
-                                                    ...f,
-                                                    enlace: e.target.value,
-                                                }))
-                                            }
-                                            className=" w-full text-white border-1 rounded-lg  border-hr focus:outline-secondary p-1"
-                                        />
-                                    </label>
-                                    <label>
-                                        <span className="text-dim">
-                                            Medio (opcional):
-                                        </span>
-                                        <input
-                                            type="text"
-                                            value={form.medio || ""}
-                                            onChange={(e) =>
-                                                setForm((f: any) => ({
-                                                    ...f,
-                                                    medio: e.target.value,
-                                                }))
-                                            }
-                                            className="  w-full text-white border-1 rounded-lg  border-hr focus:outline-secondary p-1 "
-                                        />
-                                    </label>
-                                </>
-                            )}
-                            <label>
-                                <span className="text-dim">Curso:</span>
-                                <input
-                                    type="text"
-                                    value={form.curso || ""}
-                                    onChange={(e) =>
-                                        setForm((f: any) => ({
-                                            ...f,
-                                            curso: e.target.value,
-                                        }))
-                                    }
-                                    className="  w-full text-white border-1 rounded-lg  border-hr focus:outline-secondary p-1 "
-                                />
-                            </label>
-                        </>
-                    )}
-                    {currentType === "class" && (
-                        <>
-                            <label>
-                                <span className="text-dim">Modalidad:</span>
-                                <select
-                                    value={form.modalidad || "presencial"}
-                                    onChange={(e) =>
-                                        setForm((f: any) => ({
-                                            ...f,
-                                            modalidad: e.target.value,
-                                        }))
-                                    }
-                                    className="  w-full p-2 text-gray-500 bg-bgmain border border-hr rounded-lg cursor-pointer focus:outline-primary "
-                                >
-                                    <option value="presencial">
-                                        Presencial
-                                    </option>
-                                    <option value="virtual">Virtual</option>
-                                </select>
-                            </label>
-                            {form.modalidad === "presencial" && (
+                            {modalidad === "virtual" && (
                                 <label>
-                                    <span className="text-dim">Lugar:</span>
+                                    <span className="text-dim">
+                                        Enlace (opcional):
+                                    </span>
                                     <input
                                         type="text"
-                                        value={form.lugar || ""}
-                                        onChange={(e) =>
-                                            setForm((f: any) => ({
-                                                ...f,
-                                                lugar: e.target.value,
-                                            }))
-                                        }
-                                        className="  w-full text-white border-1 rounded-lg  border-hr focus:outline-secondary p-1 "
+                                        {...register("link")}
+                                        className="w-full text-white border-1 rounded-lg border-hr focus:outline-secondary p-1"
                                     />
                                 </label>
                             )}
-                            <label>
-                                <span className="text-dim">Curso:</span>
-                                <input
-                                    type="text"
-                                    value={form.curso || ""}
-                                    onChange={(e) =>
-                                        setForm((f: any) => ({
-                                            ...f,
-                                            curso: e.target.value,
-                                        }))
-                                    }
-                                    className="  w-full text-white border-1 rounded-lg  border-hr focus:outline-secondary p-1 "
-                                />
-                            </label>
                         </>
                     )}
-                    {/* Teletrabajo y Externo no tienen campos extra */}
-
                     <div className="flex gap-2 mt-2">
                         <button
                             type="submit"

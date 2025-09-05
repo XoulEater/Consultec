@@ -1,6 +1,8 @@
 "use client";
 
+import { NavBar } from "@/components/nav/NavBar";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useEffect } from "react";
 
@@ -12,15 +14,14 @@ export default function Layout({
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const token = true;
+    const { id } = useParams();
+
     useEffect(() => {
         // const token = localStorage.getItem("token");
-
         // TODO: Remove this
-
         if (token) {
             setIsLoggedIn(true);
         }
-
         setIsLoading(false);
     }, []);
 
@@ -60,5 +61,38 @@ export default function Layout({
         );
     }
 
-    return <>{children}</>;
+    return (
+        <div className="flex flex-row w-full">
+            <NavBar
+                href="/admin/browse"
+                items={[
+                    {
+                        title: "Busqueda",
+                        icon: "/custom.svg",
+                        href: "/admin/browse",
+                    },
+                    {
+                        title: "Perfil",
+                        icon: "/profile.svg",
+                        href: `/admin/profile/${id}`,
+                        children: [
+                            {
+                                title: "Información",
+                                icon: "info.svg",
+                                href: `/admin/profile/${id}/information`,
+                            },
+                            {
+                                title: "Horario",
+                                icon: "schedule.svg",
+                                href: `/admin/profile/${id}/schedule`,
+                            },
+                        ],
+                    },
+                ]}
+            />
+            <div className="md:h-screen overflow-y-auto pt-20 lg:pt-6 flex-grow p-6">
+                {children}
+            </div>
+        </div>
+    );
 }

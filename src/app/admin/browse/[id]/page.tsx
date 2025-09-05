@@ -22,6 +22,27 @@ export default function Home() {
                 setSchedule(data);
                 console.log("Fetched schedule:", data); // Debugging line
 
+                // overwrite with dummy data
+
+                setSchedule([
+                    {
+                        id: "1",
+                        subject: "Matemáticas",
+                        start: 8,
+                        duration: 1,
+                        type: "class",
+                        day: 0,
+                    },
+                    {
+                        id: "2",
+                        subject: "Historia",
+                        start: 10,
+                        duration: 1,
+                        type: "class",
+                        day: 1,
+                    },
+                ]);
+
                 setLoading(false); // Set loading to false after fetching
             } catch (error) {
                 console.error("Failed to fetch schedule:", error);

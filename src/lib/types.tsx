@@ -1,3 +1,10 @@
+// Navigation item type for navbar
+export type NavItemProps = {
+    title: string;
+    icon: string;
+    href: string;
+    children?: NavItemProps[];
+};
 export type School = {
     id: number;
     name: string;
@@ -12,10 +19,15 @@ export type Schedule = {
     id: string;
     type: "consultation" | "class" | "telecommuting" | "extern";
     subject: string;
+    name?: string;
     day: number;
-    starth: number;
-    startm: number;
+    start: number;
     duration: number;
+    disabled?: boolean;
+    temp?: boolean;
+    link?: string;
+    location?: string;
+    modality?: string;
 };
 
 export type ScheduleDetail = {

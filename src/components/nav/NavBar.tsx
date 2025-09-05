@@ -1,12 +1,13 @@
 "use client";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
+import NavItem, { NavItemProps } from "./NavItem";
 
 export function NavBar({
-    children,
+    items,
     href,
 }: {
-    children: React.ReactNode;
+    items: NavItemProps[];
     href: string;
 }) {
     const [showSidebar, setShowSidebar] = useState(false); // Estado para controlar la visibilidad de la barra lateral
@@ -66,7 +67,9 @@ export function NavBar({
                 </Link>
                 {/* nav options */}
                 <section className="w-full flex flex-col gap-2 ">
-                    {children}
+                    {items.map((item, idx) => (
+                        <NavItem key={idx} {...item} />
+                    ))}
                 </section>
             </div>
         </>

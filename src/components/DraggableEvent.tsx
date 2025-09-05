@@ -1,28 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-
-export type EventType = {
-    name: string;
-    type: "consultation" | "class" | "telecommuting" | "other";
-    id: string;
-    day: number;
-    start: number;
-    duration: number;
-    disabled?: boolean;
-    temp?: boolean; // para distinguir el evento temporal
-};
+import { Schedule } from "@/lib/types";
 
 interface DraggableEventProps {
-    event: EventType;
+    event: Schedule;
     onResize: (e: React.MouseEvent, delta: number) => void;
     onDelete: (id: string) => void;
     onDuplicate?: (id: string) => void;
     onEdit?: (id: string) => void;
 }
 
-const intervalHeight = 30;
-const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+const intervalHeight = 26;
 
 const DraggableEvent: React.FC<DraggableEventProps> = ({
     event,
@@ -87,51 +76,101 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
             style={style}
             {...listeners}
             {...attributes}
-            className={`absolute left-[2.5%] w-[95%] ${
+            className={`absolute left-[1%] w-[98%] ${
                 event.type === "consultation"
-                    ? "bg-primary/90"
+                    ? "bg-primary/80 border-blue-400/90"
                     : event.type === "class"
-                    ? "bg-green-500/90"
+                    ? "bg-green-400/80 border-green-300/90"
                     : event.type === "telecommuting"
-                    ? "bg-yellow-500/90"
-                    : "bg-gray-500/90"
+                    ? "bg-yellow-500/80 border-yellow-400/90"
+                    : "bg-gray-400/80 border-gray-300/90"
             } ${event.disabled && " pointer-events-none"} 
-                
-             rounded-md shadow-md cursor-grab flex flex-col justify-between`}
+                border-l-8 rounded-l-x
+             rounded-sm shadow-md cursor-grab flex flex-col justify-between`}
         >
-            <div className="relative h-full ">
+            <div className="relative h-full flex flex-col">
                 <div className="justify-between flex pr-1">
                     <div className="text-xs font-bold flex items-center p-2 overflow-hidden">
                         <p className="line-clamp-1">{event.name}</p>
                     </div>
                     {!event.disabled && (
-                        <div className="relative min-w-fit" ref={dropdownRef}>
-                            <header className=" hidden">
-                                Evento {event.id}
-                            </header>
+                        <div
+                            className="relative min-w-fit flex justify-center items-center "
+                            ref={dropdownRef}
+                        >
                             <button
-                                onClick={(e) => onResize(e, -1)}
-                                className=" text-white border-0 rounded font-bold text-sm w-6 h-6 cursor-pointer"
+                                onMouseDown={(e) => {
+                                    let intervalId: NodeJS.Timeout;
+                                    const resize = () => onResize(e, -1);
+                                    resize();
+                                    intervalId = setInterval(resize, 150);
+                                    const stop = () => {
+                                        clearInterval(intervalId);
+                                        document.removeEventListener(
+                                            "mouseup",
+                                            stop
+                                        );
+                                    };
+                                    document.addEventListener("mouseup", stop);
+                                }}
+                                className=" text-white flex justify-center items-center  border-0 rounded font-bold text-sm w-6 h-6 cursor-pointer"
                             >
-                                -
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    height="18px"
+                                    viewBox="0 -960 960 960"
+                                    width="18px"
+                                    fill="#ffffffff"
+                                >
+                                    <path d="M232-444v-72h496v72H232Z" />
+                                </svg>
                             </button>
                             <button
-                                onClick={(e) => onResize(e, 1)}
-                                className=" text-white border-0 rounded font-bold text-sm w-6 h-6 cursor-pointer"
+                                onMouseDown={(e) => {
+                                    let intervalId: NodeJS.Timeout;
+                                    const resize = () => onResize(e, 1);
+                                    resize();
+                                    intervalId = setInterval(resize, 150);
+                                    const stop = () => {
+                                        clearInterval(intervalId);
+                                        document.removeEventListener(
+                                            "mouseup",
+                                            stop
+                                        );
+                                    };
+                                    document.addEventListener("mouseup", stop);
+                                }}
+                                className=" text-white border-0 flex justify-center items-center rounded font-bold text-sm w-6 h-6 cursor-pointer"
                             >
-                                +
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    height="18px"
+                                    viewBox="0 -960 960 960"
+                                    width="18px"
+                                    fill="#ffffffff"
+                                >
+                                    <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
+                                </svg>
                             </button>
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     setIsDropdownOpen(!isDropdownOpen);
                                 }}
-                                className="text-white p-1 px-3 cursor-pointer"
+                                className="text-white w-6 h-6 cursor-pointer flex justify-center items-center"
                                 tabIndex={0}
                                 aria-haspopup="menu"
                                 aria-expanded={isDropdownOpen}
                             >
-                                ⋮
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    height="18px"
+                                    viewBox="0 -960 960 960"
+                                    width="18px"
+                                    fill="#ffffffff"
+                                >
+                                    <path d="M479.79-192Q450-192 429-213.21t-21-51Q408-294 429.21-315t51-21Q510-336 531-314.79t21 51Q552-234 530.79-213t-51 21Zm0-216Q450-408 429-429.21t-21-51Q408-510 429.21-531t51-21Q510-552 531-530.79t21 51Q552-450 530.79-429t-51 21Zm0-216Q450-624 429-645.21t-21-51Q408-726 429.21-747t51-21Q510-768 531-746.79t21 51Q552-666 530.79-645t-51 21Z" />
+                                </svg>
                             </button>
                             <div
                                 className={`absolute right-0 top-6 z-40 bg-neutral-800 border-0 rounded shadow-md min-w-[100px] transition-all duration-500 ease-in-out overflow-hidden ${
@@ -174,6 +213,29 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
                         </div>
                     )}
                 </div>
+
+                {event.duration > 1 && (
+                    <div className="p-2 pt-0 text-xs font-medium overflow-hidden">
+                        <p className="line-clamp-2">{event.subject}</p>
+                        <span className="opacity-80 ">
+                            {`${Math.floor(event.start / 2) + 7}:${
+                                event.start % 2 === 0 ? "00" : "30"
+                            }`}
+                            <span className="mx-1 hidden md:inline">-</span>
+                            <br className="md:hidden inline" />
+                            {`${
+                                Math.floor(event.start / 2) +
+                                Math.floor(event.duration / 2) +
+                                7
+                            }:${
+                                Math.floor(event.start + event.duration) % 2 ===
+                                0
+                                    ? "00"
+                                    : "30"
+                            }`}
+                        </span>
+                    </div>
+                )}
             </div>
         </div>
     );

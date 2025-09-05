@@ -6,17 +6,18 @@ import {
     DragEndEvent,
     DragStartEvent,
 } from "@dnd-kit/core";
-import { EventType } from "./DraggableEvent";
+
+import { Schedule } from "@/lib/types";
 
 const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
-const startHour = 7;
+const startour = 7;
 const endHour = 22;
 const intervalMinutes = 30;
-const intervalHeight = 30;
-const intervals = (endHour - startHour) * (60 / intervalMinutes);
+const intervalHeight = 26;
+const intervals = (endHour - startour) * (60 / intervalMinutes);
 
 function hasCollision(
-    events: EventType[],
+    events: Schedule[],
     day: number,
     start: number,
     duration: number,
@@ -30,7 +31,11 @@ function hasCollision(
     });
 }
 
-export function useWeeklyCalendarLogic() {
+interface props {
+    schedule: Schedule[];
+}
+
+export function useWeeklyCalendarLogic({ schedule }: props) {
     const [showNewEventModal, setShowNewEventModal] = useState(false);
     const [newEventData, setNewEventData] = useState<{
         day: number;
@@ -42,56 +47,47 @@ export function useWeeklyCalendarLogic() {
         name: "",
         type: "class",
         duration: 2,
+        subject: "",
+        location: "",
+        modality: "presencial",
+        link: "",
     });
-    const [events, setEvents] = useState<EventType[]>(() => {
-        const saved = sessionStorage.getItem("calendar-events");
-        if (saved) {
-            try {
-                return JSON.parse(saved);
-            } catch {
-                // fallback to default
-            }
-        }
-        return [
-            {
-                id: "1",
-                day: 1,
-                start: 1,
-                duration: 4,
-                name: "Matemáticas",
-                type: "class",
-            },
-            {
-                id: "2",
-                day: 0,
-                start: 1,
-                duration: 8,
-                name: "Consejo",
-                type: "other",
-                disabled: true,
-            },
-        ];
-    });
-    // Guardar eventos en sessionStorage al cambiar
+    const [events, setEvents] = useState<Schedule[]>(schedule);
+
+    // Sincronizar events con schedule cada vez que schedule cambie
     useEffect(() => {
-        sessionStorage.setItem("calendar-events", JSON.stringify(events));
-    }, [events]);
+        // Solo actualizar si la longitud o el contenido realmente cambió
+        if (
+            events.length !== schedule.length ||
+            JSON.stringify(events) !== JSON.stringify(schedule)
+        ) {
+            setEvents(schedule);
+        }
+    }, [schedule]);
 
     // Evento temporal para edición en tiempo real
-    let tempEvent: EventType | null = null;
+    const [tempForm, setTempForm] = useState<Partial<Schedule>>({});
+    let tempEvent: Schedule | null = null;
     if (showNewEventModal && newEventData) {
+        const source = Object.keys(tempForm).length ? tempForm : form;
         tempEvent = {
             id: "temp",
             day: newEventData.day,
             start: newEventData.start,
-            duration: form.duration || 1,
-            name: form.name || "Nuevo evento",
-            type: (["class", "consultation", "telecommuting", "other"].includes(
-                form.type
+            duration: source.duration || 1,
+            name: source.name || "Nuevo evento",
+            subject:
+                source.type === "class" || source.type === "consultation"
+                    ? source.subject || "Materia"
+                    : "",
+            type: ["class", "consultation", "telecommuting", "other"].includes(
+                source.type as string
             )
-                ? form.type
-                : "class") as EventType["type"],
-            // Se pueden agregar más campos si se usan en DraggableEvent
+                ? (source.type as Schedule["type"])
+                : "class",
+            location: source.location ?? "",
+            modality: source.modality ?? "presencial",
+            link: source.link ?? "",
         };
     }
     const [activeId, setActiveId] = useState<string | null>(null);
@@ -139,14 +135,8 @@ export function useWeeklyCalendarLogic() {
         setActiveId(null);
     }
 
-    const handleResize = (e: React.MouseEvent, delta: number) => {
-        console.log("Resizing by", delta);
-        const eventId = (
-            e.currentTarget.parentElement?.parentElement?.querySelector(
-                "header"
-            )?.textContent || ""
-        ).replace("Evento ", "");
-
+    function handleResize(e: React.MouseEvent, delta: number, eventId: string) {
+        if (!eventId) return;
         setEvents((prev) =>
             prev.map((ev) => {
                 if (ev.id !== eventId) return ev;
@@ -160,7 +150,7 @@ export function useWeeklyCalendarLogic() {
                 return ev;
             })
         );
-    };
+    }
 
     function handleGridClick(
         dayIndex: number,
@@ -184,7 +174,7 @@ export function useWeeklyCalendarLogic() {
         setEditEventId(null); // Limpiar edición
         // Ajustar para que el modal no se salga por abajo
         let modalHeight = 390;
-        const modal = document.querySelector('form.bg-bgmain');
+        const modal = document.querySelector("form.bg-bgmain");
         if (modal) {
             modalHeight = (modal as HTMLElement).offsetHeight || 390;
         }
@@ -198,15 +188,22 @@ export function useWeeklyCalendarLogic() {
             x: x,
             y: y,
         });
-        setForm({ name: "", type: "class", duration: 2 });
+        setForm({
+            name: "",
+            type: "class",
+            duration: 2,
+            subject: "",
+            location: "",
+            modality: "presencial",
+            link: "",
+        });
         setShowNewEventModal(true);
     }
 
     // Si editEventId está presente, se edita, si no, se crea
     const [editEventId, setEditEventId] = useState<string | null>(null);
 
-    function handleNewEventSubmit(e: React.FormEvent) {
-        e.preventDefault();
+    function handleNewEventSubmit(data: Schedule) {
         if (!newEventData) return;
         if (editEventId) {
             // Editar evento existente
@@ -215,26 +212,37 @@ export function useWeeklyCalendarLogic() {
                     ev.id === editEventId
                         ? {
                               ...ev,
-                              ...form,
+                              ...data,
                               day: newEventData.day,
                               start: newEventData.start,
-                              duration: form.duration,
-                              type: (["class", "consultation", "telecommuting", "other"].includes(form.type)
-                                  ? form.type
-                                  : "class") as EventType["type"],
+                              duration: data.duration,
+                              type: ([
+                                  "class",
+                                  "consultation",
+                                  "telecommuting",
+                                  "extern",
+                              ].includes(data.type)
+                                  ? data.type
+                                  : "class") as Schedule["type"],
                           }
                         : ev
                 )
             );
         } else {
             // Crear nuevo evento
-            const newEvent: EventType = {
+            const newEvent: Schedule = {
+                ...data,
                 id: Date.now().toString(),
                 day: newEventData.day,
                 start: newEventData.start,
-                duration: form.duration,
-                name: form.name || "Nuevo evento",
-                type: form.type as EventType["type"],
+                type: ([
+                    "class",
+                    "consultation",
+                    "telecommuting",
+                    "extern",
+                ].includes(data.type)
+                    ? data.type
+                    : "class") as Schedule["type"],
             };
             if (
                 !hasCollision(
@@ -256,14 +264,23 @@ export function useWeeklyCalendarLogic() {
         const ev = events.find((e) => e.id === id);
         if (!ev) return;
         setEditEventId(id);
-        setForm({ ...ev });
+        setForm({
+            name: ev.name ?? "",
+            type: ev.type,
+            duration: ev.duration,
+            subject: ev.subject,
+            location: ev.location ?? "",
+            modality: ev.modality ?? "presencial",
+            link: ev.link ?? "",
+        });
         setTimeout(() => {
             const el = document.querySelector(`[data-event-id='${id}']`);
             let modalHeight = 390;
             // Intentar obtener el alto real del modal si ya existe
-            const modal = document.querySelector('form.bg-bgmain');
+            const modal = document.querySelector("form.bg-bgmain");
             if (modal) {
-                modalHeight = (modal as HTMLElement).offsetHeight || modalHeight;
+                modalHeight =
+                    (modal as HTMLElement).offsetHeight || modalHeight;
             }
             if (el) {
                 const rect = el.getBoundingClientRect();
@@ -272,7 +289,12 @@ export function useWeeklyCalendarLogic() {
                 const side = dayIndex >= 3 ? rect.left - 405 : rect.right;
                 const x = Math.min(side, window.innerWidth - 320);
                 let y = rect.top;
-                console.log("Modal height:", modalHeight, "Event top:", window.innerHeight );
+                console.log(
+                    "Modal height:",
+                    modalHeight,
+                    "Event top:",
+                    window.innerHeight
+                );
                 if (y + modalHeight > window.innerHeight) {
                     y = window.innerHeight - modalHeight - 10;
                     if (y < 0) y = 10;
@@ -309,8 +331,10 @@ export function useWeeklyCalendarLogic() {
                 prev.some(
                     (e) =>
                         e.day === ev.day &&
-                        ((newStart >= e.start && newStart < e.start + e.duration) ||
-                            (newStart + ev.duration > e.start && newStart + ev.duration <= e.start + e.duration))
+                        ((newStart >= e.start &&
+                            newStart < e.start + e.duration) ||
+                            (newStart + ev.duration > e.start &&
+                                newStart + ev.duration <= e.start + e.duration))
                 )
             ) {
                 newStart++;
@@ -339,7 +363,8 @@ export function useWeeklyCalendarLogic() {
         setForm,
         events,
         setEvents,
-        tempEvent, // nuevo
+        tempEvent,
+        setTempForm,
         activeId,
         setActiveId,
         columnRef,
@@ -351,14 +376,15 @@ export function useWeeklyCalendarLogic() {
         handleResize,
         handleGridClick,
         handleNewEventSubmit,
-    handleDeleteEvent,
-    handleEditEvent,
+        handleDeleteEvent,
+        handleEditEvent,
         handleDuplicateEvent,
         days,
-        startHour,
+        startour,
         endHour,
         intervalMinutes,
         intervalHeight,
         intervals,
+        editEventId,
     };
 }

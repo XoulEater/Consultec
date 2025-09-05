@@ -7,12 +7,10 @@ export function ReadSchedule({ schedules }: { schedules: Schedule[] }) {
     const [selectedSchedule, setSelectedSchedule] = useState<string | null>(
         null
     );
-
     const handleClickSchedule = (idx: number) => {
         setSelectedSchedule(schedules[idx].id);
         setShowModal(true);
     };
-
     const days = [
         "Lunes",
         "Martes",
@@ -21,7 +19,16 @@ export function ReadSchedule({ schedules }: { schedules: Schedule[] }) {
         "Viernes",
         "Sábado",
     ];
+    const startHour = 7;
+    const endHour = 22;
+    const intervalHeight = 26; // px per half-hour
+    // Group events by day
 
+    console.log(schedules);
+
+    const eventsByDay = days.map((_, i) =>
+        schedules.filter((ev) => ev.day === i)
+    );
     return (
         <main className="min-w-80">
             {showModal && (
@@ -31,154 +38,106 @@ export function ReadSchedule({ schedules }: { schedules: Schedule[] }) {
                     onOk={() => setShowModal(false)}
                 />
             )}
-            {/* Calendario semanal */}
-            <div>
-                <div className="grid grid-cols-6 md:ml-14 ml-[18px]   justify-items-center">
-                    <span>
-                        L<span className="hidden md:inline">unes</span>
-                    </span>
-                    <span>
-                        M<span className="hidden md:inline">artes</span>
-                    </span>
-                    <span>
-                        M<span className="hidden md:inline">iércoles</span>
-                    </span>
-                    <span>
-                        J<span className="hidden md:inline">ueves</span>
-                    </span>
-                    <span>
-                        V<span className="hidden md:inline">iernes</span>
-                    </span>
-                    <span>
-                        S<span className="hidden md:inline">ábado</span>
-                    </span>{" "}
-                </div>
-            </div>
-
-            <div
-                className="relative h-[84vh] overflow-y-auto pb-14 lg:pb-0
-            "
-            >
-                <div className="absolute grid grid-cols-[18px_1fr_1fr_1fr_1fr_1fr_1fr]  md:grid-cols-[56px_1fr_1fr_1fr_1fr_1fr_1fr] grid-rows-[repeat(96,12px)] gap-0 z-10  w-full  ">
-                    {schedules.map((schedule, index) => (
+            {/* Days row */}
+            <div className="grid grid-cols-[80px_repeat(6,1fr)] max-h-screen">
+                <div className="h-12" />
+                {days.map((day) => (
+                    <div
+                        key={day}
+                        className="border border-neutral-800 h-12 text-center flex flex-col items-center justify-center py-1"
+                    >
+                        {day}
+                        <div className="text-xs relative w-fit text-neutral-500"></div>
+                    </div>
+                ))}
+                {/* Time column */}
+                <div>
+                    {Array.from({ length: endHour - startHour }).map((_, i) => (
                         <div
-                            onClick={() => handleClickSchedule(index)}
-                            key={index + schedule.subject}
-                            className={`${
-                                schedule.type === "consultation"
-                                    ? "bg-primary/80 border-blue-400/90"
-                                    : schedule.type === "class"
-                                    ? "bg-green-400/80 border-green-300/90"
-                                    : schedule.type === "telecommuting"
-                                    ? "bg-rose-400/80 border-rose-300/90"
-                                    : "bg-gray-400/80 border-gray-300/90"
-                            } m-[2px] text-white p-2  text-xs border-l-8  rounded-l-xs`}
-                            style={{
-                                gridColumnStart: `${schedule.day + 1}`,
-                                gridRowStart: `${
-                                    (schedule.starth - 7) * 6 +
-                                    (schedule.startm + 1)
-                                }`,
-                                height: `${schedule.duration * 12 * 6}px`,
-                            }}
+                            key={i}
+                            style={{ height: intervalHeight * 2 }}
+                            className="border-b border-neutral-800 text-xs text-right pr-1 text-neutral-300 flex items-start"
                         >
-                            <div className="justify-between  text-md hidden sm:flex flex-col">
-                                <span className="">{schedule.subject}</span>
-                                <span className="opacity-80 ">
-                                    {schedule.starth +
-                                        ":" +
-                                        schedule.startm +
-                                        "0"}
-                                    <span className="mx-1 hidden md:inline">
-                                        -
-                                    </span>
-                                    <br className="md:hidden inline" />
-                                    {schedule.starth +
-                                        schedule.duration +
-                                        ":" +
-                                        (schedule.startm === 0
-                                            ? 5
-                                            : schedule.startm - 1) +
-                                        "0"}
-                                </span>
-                            </div>
+                            {`${startHour + i}:00`}
                         </div>
                     ))}
                 </div>
-
-                <div className="grid grid-cols-[18px_1fr_1fr_1fr_1fr_1fr_1fr]  md:grid-cols-[56px_1fr_1fr_1fr_1fr_1fr_1fr] gap-0  ">
-                    {[...Array(16)].map((_, hour) => (
-                        <>
-                            <span
-                                key={hour}
-                                className="text-sm h-3 justify-self-end mr-1 -mt-1"
-                            >
-                                {7 + hour}
-                                <span className="hidden md:inline">:00</span>
-                            </span>
-                            {[...Array(6).fill(null)].map((_, index) => (
-                                <span
+                {/* Schedule grid */}
+                {days.map((day, dayIndex) => (
+                    <div
+                        key={day}
+                        className="border-l border-r border-neutral-800"
+                        style={{
+                            position: "relative",
+                            minHeight: `${
+                                (endHour - startHour) * intervalHeight * 2
+                            }px`,
+                        }}
+                    >
+                        {Array.from({ length: endHour - startHour }).map(
+                            (_, i) => (
+                                <div
+                                    key={i}
+                                    style={{ height: intervalHeight * 2 }}
+                                    className="border-b border-neutral-600"
+                                />
+                            )
+                        )}
+                        {/* Events for this day */}
+                        {eventsByDay[dayIndex].map((schedule, index) => {
+                            // Calculate top and height based on start and duration
+                            const top =
+                                (schedule.start - startHour) *
+                                intervalHeight *
+                                2;
+                            const height =
+                                schedule.duration * intervalHeight * 2;
+                            return (
+                                <div
                                     onClick={() =>
-                                        console.log(
-                                            `${days[index]}(${7 + hour}:00)`
+                                        handleClickSchedule(
+                                            schedules.indexOf(schedule)
                                         )
                                     }
-                                    key={`${days[index]}(${7 + hour}:00)`}
-                                    className={`h-3 border-t border-x border-hr  ${
-                                        index > 4 ? "bg-bghover" : ""
-                                    }`}
-                                ></span>
-                            ))}
-
-                            {[...Array(4)].map((_, rowIndex) => (
-                                <Fragment key={`${hour}-${rowIndex}`}>
-                                    <span
-                                        key={`${hour}-${rowIndex}-space`}
-                                    ></span>
-                                    {[...Array(6).fill(null)].map(
-                                        (_, index) => (
-                                            <span
-                                                onClick={() =>
-                                                    console.log(
-                                                        `${days[index]}(${
-                                                            7 + hour
-                                                        }-${rowIndex + 1}0)`
-                                                    )
-                                                }
-                                                key={`${hour}-${rowIndex}-${
-                                                    days[index]
-                                                }(${7 + hour}-${
-                                                    rowIndex + 1
-                                                }0)`}
-                                                className={`h-3 border-x border-hr  ${
-                                                    index > 4
-                                                        ? "bg-bghover"
-                                                        : ""
-                                                }`}
-                                            ></span>
-                                        )
-                                    )}
-                                </Fragment>
-                            ))}
-                            <span key={hour + "space"}></span>
-                            {[...Array(6).fill(null)].map((_, index) => (
-                                <span
-                                    onClick={() =>
-                                        console.log(
-                                            `${days[index]}(${7 + hour}:50)`
-                                        )
-                                    }
-                                    key={`${hour}-${days[index]}(${
-                                        7 + hour
-                                    }:50)`}
-                                    className={`h-3 border-b border-x border-hr  ${
-                                        index > 4 ? "bg-bghover" : ""
-                                    }`}
-                                ></span>
-                            ))}
-                        </>
-                    ))}
-                </div>
+                                    key={schedule.id}
+                                    className={`${
+                                        schedule.type === "consultation"
+                                            ? "bg-primary/80 border-blue-400/90"
+                                            : schedule.type === "class"
+                                            ? "bg-green-400/80 border-green-300/90"
+                                            : schedule.type === "telecommuting"
+                                            ? "bg-rose-400/80 border-rose-300/90"
+                                            : "bg-gray-400/80 border-gray-300/90"
+                                    } m-[2px] text-white p-2 text-xs border-l-8 rounded-l-xs absolute cursor-pointer`}
+                                    style={{
+                                        top,
+                                        left: 0,
+                                        right: 0,
+                                        height,
+                                        zIndex: 10,
+                                    }}
+                                >
+                                    <div className="justify-between text-md hidden sm:flex flex-col">
+                                        <span className="">
+                                            {schedule.subject}
+                                        </span>
+                                        <span className="opacity-80 ">
+                                            {`${schedule.start}:00`}
+                                            <span className="mx-1 hidden md:inline">
+                                                -
+                                            </span>
+                                            <br className="md:hidden inline" />
+                                            {`${
+                                                schedule.start +
+                                                schedule.duration
+                                            }:00`}
+                                        </span>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                ))}
             </div>
         </main>
     );
