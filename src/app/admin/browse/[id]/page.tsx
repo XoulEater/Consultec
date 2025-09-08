@@ -18,9 +18,9 @@ export default function Home() {
             try {
                 // sleep for 1 second to simulate loading
 
-                const data = await getScheduleByTeacherId(id as string);
-                setSchedule(data);
-                console.log("Fetched schedule:", data); // Debugging line
+                //const data = await getScheduleByTeacherId(id as string);
+                //setSchedule(data);
+                //console.log("Fetched schedule:", data); // Debugging line
 
                 // overwrite with dummy data
 

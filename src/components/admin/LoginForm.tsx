@@ -5,43 +5,65 @@ import { showToast } from "@/store/toastSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useSignIn } from "@clerk/nextjs";
+import { getTeacherByEmail } from "@/services/teacher.service";
 
 export default function LoginForm() {
     const dispatch = useDispatch();
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
+    const { isLoaded, signIn, setActive } = useSignIn();
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset,
-    } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
-    const onSubmit = (data: any) => {
-        // TODO: Implement login logic
-        if (
-            data.email === "josepablo28072004@gmail.com" &&
-            data.password === "1234"
-        ) {
+
+    const onSubmit = async (data: any) => {
+        if (!isLoaded) return; // Clerk todavía no está listo
+
+        try {
+        const result = await signIn.create({
+            identifier: data.email,
+            password: data.password,
+        });
+
+        if (result.status === "complete") {
+            
+            await setActive({ session: result.createdSessionId });
+            
             dispatch(
-                showToast({
-                    message: "Inicio de sesión exitoso",
-                    type: "success",
-                })
+            showToast({
+                message: "Inicio de sesión exitoso",
+                type: "success",
+            })
             );
+
+            const teacher = await getTeacherByEmail(data.email);
+            if (teacher?._id) {
+            localStorage.setItem("teacherId", teacher._id);
+}
+
             router.push("/admin/browse");
-            reset();
         } else {
+            console.log("SignIn result:", result);
             dispatch(
-                showToast({
-                    message: "Credenciales incorrectas",
-                    type: "error",
-                })
+            showToast({
+                message: "Se requiere verificación adicional",
+                type: "info",
+            })
             );
+        }
+        } catch (err: any) {
+        console.error("Error en login", err.errors);
+        dispatch(
+            showToast({
+            message: err.errors?.[0]?.message || "Credenciales incorrectas",
+            type: "error",
+            })
+        );
         }
     };
 
+    
     return (
         <form
             className="flex flex-col gap-4 items-center w-full"
