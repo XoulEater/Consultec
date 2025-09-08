@@ -1,17 +1,32 @@
-"use client";
-import { useEffect } from "react";
+"use client"; 
+
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { NavBar } from "@/components/nav/NavBar";
 import { getTeacherByEmail } from "@/services/teacher.service";
-import { useUser } from "@clerk/nextjs";
-import { useState } from "react";
 
 export default function LayoutB({ children }: { children: React.ReactNode }) {
   const { isSignedIn } = useAuth();
-
   const { user } = useUser();
+  const router = useRouter();
+
   const [teacherId, setTeacherId] = useState<string | null>(null);
+
+  
+  useEffect(() => {
+    if (!isSignedIn) {
+      router.replace("/login");
+    }
+  }, [isSignedIn, router]);
+
+  useEffect(() => {
+    if (!isSignedIn) {
+      router.replace("/login");
+    }
+  }, [isSignedIn, router]);
+
+  if (!isSignedIn) return null;
 
   useEffect(() => {
     if (isSignedIn && user?.emailAddresses?.[0]?.emailAddress) {
