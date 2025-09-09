@@ -7,6 +7,7 @@ import { getTeachers } from "@/services/teacher.service";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
+import { SignOutButton } from "@clerk/nextjs";
 
 export default function Home() {
     const [teachers, setTeachers] = useState<TeachersTable[] | undefined>();
@@ -73,6 +74,14 @@ export default function Home() {
                                 <img src="/icons/download.svg" alt="add" />
                                 <span>Descargar Horario</span>
                             </button>
+                            <SignOutButton>
+                                <button
+                                    className="bg-gradient text-white px-4 py-2 rounded-md"
+                                    onClick={() => localStorage.removeItem("teacherId")}
+                                >
+                                    Cerrar sesión
+                                </button>
+                            </SignOutButton>
                         </div>
                     </header>
                     <hr className="border-t border-hr" />

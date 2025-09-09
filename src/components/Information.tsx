@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getTeacherById, updateTeacher } from "@/services/teacher.service";
+import { getTeacherById, updateTeacher, deleteTeacher } from "@/services/teacher.service";
+import { SignOutButton } from "@clerk/nextjs";
 import { Teacher } from "@/lib/types";
 
 interface FormData {
@@ -20,7 +21,8 @@ export function Information() {
     const router = useRouter();
     const [teacherId, setTeacherId] = useState<string | null>(null);
     const [teacherData, setTeacherData] = useState<Teacher | null>(null);
-    
+
+
     const [alignment, setAlignment] = useState("web");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -128,6 +130,14 @@ export function Information() {
             alert("Error al guardar la información");
         } finally {
             setSaving(false);
+        }
+    };
+
+    const handleDeleteAndLogout = async () => {
+        const teacherId = localStorage.getItem("teacherId");
+        if (teacherId) {
+            await deleteTeacher(teacherId);
+            localStorage.removeItem("teacherId");
         }
     };
 
@@ -370,6 +380,16 @@ export function Information() {
                             {saving ? 'Guardando...' : 'Guardar'}
                         </span>
                     </button>
+                    <SignOutButton>
+                        <button
+                            className="px-4 py-2 bg-primary text-white rounded-md flex items-center hover:bg-primary/80 gap-2 transition-all duration-300 disabled:opacity-50"
+                            onClick={async () => {
+                                await handleDeleteAndLogout();
+                            }}
+                        >
+                            Eliminar
+                        </button>
+                    </SignOutButton>
                 </div>
             </div>
         </div>

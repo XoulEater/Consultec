@@ -5,19 +5,35 @@ import { showToast } from "@/store/toastSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useSignIn } from "@clerk/nextjs";
+import { useSignIn, useAuth } from "@clerk/nextjs";
 import { getTeacherByEmail } from "@/services/teacher.service";
+import { useEffect } from "react";
 
 export default function LoginForm() {
     const dispatch = useDispatch();
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const { isLoaded, signIn, setActive } = useSignIn();
-
+    const { isSignedIn } = useAuth();
+  
     const { register, handleSubmit, formState: { errors } } = useForm();
 
 
+    useEffect(() => {
+        if (isSignedIn) {
+        dispatch(
+            showToast({
+            message: "Ya tienes una sesión activa",
+            type: "info",
+            })
+        );
+        router.replace("/admin/browse");
+        }
+    }, [isSignedIn, dispatch, router]);
+
     const onSubmit = async (data: any) => {
+
+        
         if (!isLoaded) return; // Clerk todavía no está listo
 
         try {

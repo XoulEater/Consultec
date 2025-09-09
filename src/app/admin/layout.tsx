@@ -7,26 +7,17 @@ import { NavBar } from "@/components/nav/NavBar";
 import { getTeacherByEmail } from "@/services/teacher.service";
 
 export default function LayoutB({ children }: { children: React.ReactNode }) {
-  const { isSignedIn } = useAuth();
-  const { user } = useUser();
   const router = useRouter();
-
-  const [teacherId, setTeacherId] = useState<string | null>(null);
+const { isSignedIn, isLoaded } = useAuth();
+const { user } = useUser();
+const [teacherId, setTeacherId] = useState<string | null>(null);
 
   
   useEffect(() => {
-    if (!isSignedIn) {
-      router.replace("/login");
-    }
-  }, [isSignedIn, router]);
-
-  useEffect(() => {
-    if (!isSignedIn) {
-      router.replace("/login");
-    }
-  }, [isSignedIn, router]);
-
-  if (!isSignedIn) return null;
+  if (!isSignedIn && isLoaded) {
+    router.replace("/login");
+  }
+}, [isSignedIn, isLoaded, router]);
 
   useEffect(() => {
     if (isSignedIn && user?.emailAddresses?.[0]?.emailAddress) {
@@ -39,6 +30,8 @@ export default function LayoutB({ children }: { children: React.ReactNode }) {
         });
     }
   }, [isSignedIn, user]);
+
+  if (!isSignedIn && isLoaded) return null;
 
   return (
     <div className="flex flex-row w-full">
