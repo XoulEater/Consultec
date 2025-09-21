@@ -6,12 +6,15 @@ import { getExcelByTeacherId } from "@/services/schedule.service";
 import { getTeachers } from "@/services/teacher.service";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import { useAuth } from "@clerk/nextjs";
+import { SignOutButton } from "@clerk/nextjs";
 
 export default function Home() {
     const [teachers, setTeachers] = useState<TeachersTable[] | undefined>();
     const [searchParams, setSearchParams] = useState<string | undefined>();
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    const { getToken } = useAuth(); 
 
     useEffect(() => {
         const fetchTeachers = async () => {
@@ -39,13 +42,13 @@ export default function Home() {
     };
 
     const handleDownloadExcel = async () => {
-        getExcelByTeacherId("680f083ea4c49105539a8ffa")
-            .then(() => {
-                console.log("Excel downloaded successfully");
-            })
-            .catch((error) => {
-                console.error("Error downloading Excel:", error);
-            });
+        try {
+        const token = await getToken({ template: "Consultec" });
+        await getExcelByTeacherId("680f083ea4c49105539a8ffa", token);
+        console.log("Excel downloaded successfully");
+        } catch (error) {
+        console.error("Error downloading Excel:", error);
+        }
     };
     return (
         <Suspense
@@ -71,6 +74,14 @@ export default function Home() {
                                 <img src="/icons/download.svg" alt="add" />
                                 <span>Descargar Horario</span>
                             </button>
+                            <SignOutButton>
+                                <button
+                                    className="bg-gradient text-white px-4 py-2 rounded-md"
+                                    onClick={() => localStorage.removeItem("teacherId")}
+                                >
+                                    Cerrar sesión
+                                </button>
+                            </SignOutButton>
                         </div>
                     </header>
                     <hr className="border-t border-hr" />

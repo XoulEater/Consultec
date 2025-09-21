@@ -1,98 +1,70 @@
-"use client";
+"use client"; 
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { NavBar } from "@/components/nav/NavBar";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useState } from "react";
-import { useEffect } from "react";
+import { getTeacherByEmail } from "@/services/teacher.service";
 
-export default function Layout({
-    children,
-}: Readonly<{
-    children: React.ReactNode;
-}>) {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-    const token = true;
-    const { id } = useParams();
+export default function LayoutB({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+const { isSignedIn, isLoaded } = useAuth();
+const { user } = useUser();
+const [teacherId, setTeacherId] = useState<string | null>(null);
 
-    useEffect(() => {
-        // const token = localStorage.getItem("token");
-        // TODO: Remove this
-        if (token) {
-            setIsLoggedIn(true);
-        }
-        setIsLoading(false);
-    }, []);
+  
+  useEffect(() => {
+  if (!isSignedIn && isLoaded) {
+    router.replace("/login");
+  }
+}, [isSignedIn, isLoaded, router]);
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center h-screen w-full bg-bgmain">
-                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-secondary"></div>
-            </div>
-        );
+  useEffect(() => {
+    if (isSignedIn && user?.emailAddresses?.[0]?.emailAddress) {
+      getTeacherByEmail(user.emailAddresses[0].emailAddress)
+        .then((teacher) => {
+          if (teacher?._id) {
+            localStorage.setItem("teacherId", teacher._id);
+            setTeacherId(teacher._id);
+          }
+        });
     }
+  }, [isSignedIn, user]);
 
-    if (!isLoggedIn) {
-        return (
-            <div className="flex flex-col items-center justify-center h-full w-full gap-5 pb-24 absolute top-0 left-0 bg-bgmain">
-                <img
-                    className="h-56 transition-all duration-300 ease-in-out [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110 "
-                    src="https://media.tenor.com/MYZgsN2TDJAAAAAM/this-is.gif"
-                    alt=""
-                />
-                <h1 className="text-8xl font-bold">401</h1>
-                <h2 className="text-2xl font-semibold">
-                    Esta página es solo para administradores
-                </h2>
-                <section className="flex flex-row gap-4">
-                    <Link href="/students">
-                        <button className="bg-secondary  text-light font-bold py-2 px-4 rounded-md transition-all duration-300 ease-in-out [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110 cursor-pointer">
-                            Regresar al inicio
-                        </button>
-                    </Link>
-                    <Link href="/login">
-                        <button className="bg-secondary  text-light font-bold py-2 px-4 rounded-md transition-all duration-300 ease-in-out [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110 cursor-pointer">
-                            Iniciar sesión
-                        </button>
-                    </Link>
-                </section>
-            </div>
-        );
-    }
+  if (!isSignedIn && isLoaded) return null;
 
-    return (
-        <div className="flex flex-row w-full">
-            <NavBar
-                href="/admin/browse"
-                items={[
-                    {
-                        title: "Busqueda",
-                        icon: "/custom.svg",
-                        href: "/admin/browse",
-                    },
-                    {
-                        title: "Perfil",
-                        icon: "/profile.svg",
-                        href: `/admin/profile/${id}`,
-                        children: [
-                            {
-                                title: "Información",
-                                icon: "info.svg",
-                                href: `/admin/profile/${id}/information`,
-                            },
-                            {
-                                title: "Horario",
-                                icon: "schedule.svg",
-                                href: `/admin/profile/${id}/schedule`,
-                            },
-                        ],
-                    },
-                ]}
-            />
-            <div className="md:h-screen overflow-y-auto pt-20 lg:pt-6 flex-grow p-6">
-                {children}
-            </div>
-        </div>
-    );
+  return (
+    <div className="flex flex-row w-full">
+      <NavBar
+        href="/admin/browse"
+        items={[
+          {
+            title: "Busqueda",
+            icon: "/custom.svg",
+            href: "/admin/browse",
+          },
+          {
+            title: "Perfil",
+            icon: "/profile.svg",
+            href: `/admin/profile/${teacherId}`,
+            children: [
+              {
+                title: "Información",
+                icon: "info.svg",
+                href: `/admin/profile/${teacherId}/information`,
+              },
+              {
+                title: "Horario",
+                icon: "schedule.svg",
+                href: `/admin/profile/${teacherId}/schedule`,
+              },
+            ],
+          },
+        ]}
+      />
+      <div className="md:h-screen overflow-y-auto pt-20 lg:pt-6 flex-grow p-6">
+        {children}
+      </div>
+    </div>
+  );
 }

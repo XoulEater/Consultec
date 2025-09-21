@@ -62,3 +62,13 @@ export const deleteTeacher = async (id: string) => {
         throw error;
     }
 };
+
+export const getTeacherByEmail = async (email: string) => {
+    try {
+        const response = await axios.get<Teacher>(`${API_URL}/byemail/${email}`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching teacher with email ${email}:`, error);
+        throw error;
+    }
+};

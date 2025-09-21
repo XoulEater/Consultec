@@ -81,6 +81,12 @@ export type FilterType = {
 };
 
 export interface Teacher {
+    role: string;
+    subject: string;
+    email: string;
+    office: string;
+    location: string;
+    officePhone: string;
     _id: string;
     name: string;
     school: string;
