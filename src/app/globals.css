@@ -17,7 +17,7 @@ warning: "#E34850", // Warning Rojo
 :root {
     font-family: 'Poppins', sans-serif;
     color-scheme: dark;
-    @apply bg-bgmain;  
+    background-color: var(--color-bgmain);  
 }
 
 @theme {
