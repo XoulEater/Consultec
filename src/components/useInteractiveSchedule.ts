@@ -24,7 +24,7 @@ function hasCollision(
     ignoreId: string
 ): boolean {
     return events.some((ev) => {
-        if (ev.day !== day || ev.id === ignoreId) return false;
+        if (ev.day !== day || ev._id === ignoreId) return false;
         return !(
             start + duration <= ev.start || start >= ev.start + ev.duration
         );
@@ -35,7 +35,7 @@ interface props {
     schedule: Schedule[];
 }
 
-export function useWeeklyCalendarLogic({ schedule }: props) {
+export function useInteractiveScheduleLogic({ schedule }: props) {
     const [showNewEventModal, setShowNewEventModal] = useState(false);
     const [newEventData, setNewEventData] = useState<{
         day: number;
@@ -71,7 +71,7 @@ export function useWeeklyCalendarLogic({ schedule }: props) {
     if (showNewEventModal && newEventData) {
         const source = Object.keys(tempForm).length ? tempForm : form;
         tempEvent = {
-            id: "temp",
+            _id: "temp",
             day: newEventData.day,
             start: newEventData.start,
             duration: source.duration || 1,
@@ -118,7 +118,7 @@ export function useWeeklyCalendarLogic({ schedule }: props) {
     function handleDragEnd({ active, delta }: DragEndEvent) {
         setEvents((prev) => {
             return prev.map((ev) => {
-                if (ev.id !== active.id) return ev;
+                if (ev._id !== active.id) return ev;
                 let newDay = ev.day + Math.round(delta.x / columnWidth);
                 let newStart = ev.start + Math.round(delta.y / intervalHeight);
                 newDay = Math.max(0, Math.min(days.length - 1, newDay));
@@ -126,7 +126,9 @@ export function useWeeklyCalendarLogic({ schedule }: props) {
                     0,
                     Math.min(intervals - ev.duration, newStart)
                 );
-                if (!hasCollision(prev, newDay, newStart, ev.duration, ev.id)) {
+                if (
+                    !hasCollision(prev, newDay, newStart, ev.duration, ev._id)
+                ) {
                     return { ...ev, day: newDay, start: newStart };
                 }
                 return ev;
@@ -139,12 +141,14 @@ export function useWeeklyCalendarLogic({ schedule }: props) {
         if (!eventId) return;
         setEvents((prev) =>
             prev.map((ev) => {
-                if (ev.id !== eventId) return ev;
+                if (ev._id !== eventId) return ev;
                 let newDuration = Math.max(1, ev.duration + delta);
                 if (ev.start + newDuration > intervals) {
                     newDuration = intervals - ev.start;
                 }
-                if (!hasCollision(prev, ev.day, ev.start, newDuration, ev.id)) {
+                if (
+                    !hasCollision(prev, ev.day, ev.start, newDuration, ev._id)
+                ) {
                     return { ...ev, duration: newDuration };
                 }
                 return ev;
@@ -209,7 +213,7 @@ export function useWeeklyCalendarLogic({ schedule }: props) {
             // Editar evento existente
             setEvents((prev) =>
                 prev.map((ev) =>
-                    ev.id === editEventId
+                    ev._id === editEventId
                         ? {
                               ...ev,
                               ...data,
@@ -232,7 +236,7 @@ export function useWeeklyCalendarLogic({ schedule }: props) {
             // Crear nuevo evento
             const newEvent: Schedule = {
                 ...data,
-                id: Date.now().toString(),
+                _id: Date.now().toString(),
                 day: newEventData.day,
                 start: newEventData.start,
                 type: ([
@@ -250,7 +254,7 @@ export function useWeeklyCalendarLogic({ schedule }: props) {
                     newEvent.day,
                     newEvent.start,
                     newEvent.duration,
-                    newEvent.id
+                    newEvent._id
                 )
             ) {
                 setEvents((prev) => [...prev, newEvent]);
@@ -261,7 +265,7 @@ export function useWeeklyCalendarLogic({ schedule }: props) {
         setEditEventId(null);
     }
     function handleEditEvent(id: string) {
-        const ev = events.find((e) => e.id === id);
+        const ev = events.find((e) => e._id === id);
         if (!ev) return;
         setEditEventId(id);
         setForm({
@@ -318,12 +322,12 @@ export function useWeeklyCalendarLogic({ schedule }: props) {
     }
 
     function handleDeleteEvent(id: string) {
-        setEvents((prev) => prev.filter((ev) => ev.id !== id));
+        setEvents((prev) => prev.filter((ev) => ev._id !== id));
     }
 
     function handleDuplicateEvent(id: string) {
         setEvents((prev) => {
-            const ev = prev.find((e) => e.id === id);
+            const ev = prev.find((e) => e._id === id);
             if (!ev) return prev;
             // Buscar el siguiente hueco disponible en el mismo día
             let newStart = ev.start + ev.duration;
@@ -347,7 +351,7 @@ export function useWeeklyCalendarLogic({ schedule }: props) {
                 ...prev,
                 {
                     ...ev,
-                    id: Date.now().toString(),
+                    _id: Date.now().toString(),
                     start: newStart,
                 },
             ];

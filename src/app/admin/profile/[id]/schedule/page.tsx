@@ -1,20 +1,21 @@
 "use client";
 import { BackButton } from "@/components/BackButton";
-import { ReadSchedule } from "@/components/ReadSchedule";
 import { useParams } from "next/navigation";
 import type { Schedule } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "@/store/hooks";
 import { showAlert } from "@/store/alertSlice";
 import AlertModal from "@/components/AlertModal";
-import { getScheduleByTeacherId } from "@/services/schedule.service";
-import WeeklyCalendar from "@/components/InteractiveSchedule";
-import { set } from "react-hook-form";
-import { json } from "stream/consumers";
+import {
+    getScheduleByTeacherId,
+    updateSchedule,
+} from "@/services/schedule.service";
+import InteractiveSchedule from "@/components/InteractiveSchedule";
+import { showToast } from "@/store/toastSlice";
 
 export default function Schedule() {
     const { id } = useParams();
-    const teacherId: string = "680f083ea4c49105539a8ffa";
+    const teacherId = id as string;
     // Eliminar estado schedule, solo usar draft y original
     const [original, setOriginal] = useState<Schedule[] | null>(null);
     const [draft, setDraft] = useState<Schedule[] | null>(null);
@@ -25,26 +26,14 @@ export default function Schedule() {
             const response = (await getScheduleByTeacherId(
                 teacherId
             )) as Schedule[];
-            const data: Schedule[] = [
-                {
-                    name: "Clase de Matemáticas",
-                    id: "1",
-                    subject: "Matemáticas",
-                    start: 8,
-                    duration: 4,
-                    type: "class",
-                    day: 0,
-                },
-                {
-                    name: "Clase de Historia",
-                    id: "2",
-                    subject: "Historia",
-                    start: 10,
-                    duration: 4,
-                    type: "class",
-                    day: 1,
-                },
-            ];
+
+            console.log("Fetched schedule:", response);
+
+            const data =
+                response.map((item) => ({
+                    ...item,
+                    name: item.name || "Evento",
+                })) || [];
             const draftStr = sessionStorage.getItem("calendar-draft");
             const originalStr = sessionStorage.getItem("calendar-original");
             let draftArr: Schedule[] = [];
@@ -114,16 +103,25 @@ export default function Schedule() {
         );
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (draft) setOriginal(draft);
         setIsUnsaved(false);
-        dispatch(
-            showAlert({
-                message: "Cambios guardados exitosamente.",
-                type: "info",
-            })
-        );
-        // Aquí iría la lógica para guardar en backend si es necesario
+        sessionStorage.setItem("calendar-original", JSON.stringify(draft));
+        sessionStorage.setItem("calendar-draft", JSON.stringify(draft));
+        await updateSchedule(
+            teacherId,
+            draft?.map((item) => ({
+                ...item,
+                _id: null,
+            })) || []
+        ).then(() => {
+            dispatch(
+                showToast({
+                    message: "Horario guardado correctamente.",
+                    type: "success",
+                })
+            );
+        });
     };
 
     const handleClean = () => {
@@ -179,9 +177,7 @@ export default function Schedule() {
                             </button>
                             <button
                                 className=" px-2 py-2 rounded bg-primary text-white hover:scale-105 hover:shadow-lg transition-all duration-200"
-                                onClick={() => {
-                                    /* lógica pendiente */
-                                }}
+                                onClick={() => handleSave()}
                             >
                                 Guardar
                             </button>
@@ -191,7 +187,7 @@ export default function Schedule() {
             </header>
             <hr className="border-hr" />
             {draft && (
-                <WeeklyCalendar
+                <InteractiveSchedule
                     schedule={draft}
                     onChange={(newDraft: Schedule[]) => {
                         if (

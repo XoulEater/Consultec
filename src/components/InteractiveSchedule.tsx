@@ -2,18 +2,18 @@ import React, { useEffect } from "react";
 import { DndContext } from "@dnd-kit/core";
 import DraggableEvent from "./DraggableEvent";
 import NewEventModal from "./NewEventModal";
-import { useWeeklyCalendarLogic } from "./useWeeklyCalendarLogic";
+import { useInteractiveScheduleLogic } from "./useInteractiveSchedule";
 import { Schedule } from "@/lib/types";
 
-interface WeeklyCalendarProps {
+interface InteractiveScheduleProps {
     schedule: Schedule[];
     onChange?: (draft: Schedule[]) => void;
 }
 
-export default function WeeklyCalendar({
+export default function InteractiveSchedule({
     schedule,
     onChange,
-}: WeeklyCalendarProps) {
+}: InteractiveScheduleProps) {
     const {
         showNewEventModal,
         setShowNewEventModal,
@@ -37,7 +37,7 @@ export default function WeeklyCalendar({
         handleEditEvent,
         editEventId,
         setTempForm,
-    } = useWeeklyCalendarLogic({ schedule });
+    } = useInteractiveScheduleLogic({ schedule });
 
     useEffect(() => {
         // Solo dispara onChange si events es diferente al prop schedule
@@ -61,7 +61,7 @@ export default function WeeklyCalendar({
                     newEventData={newEventData ?? undefined}
                     editEvent={
                         editEventId
-                            ? events.find((ev) => ev.id === editEventId)
+                            ? events.find((ev) => ev._id === editEventId)
                             : undefined
                     }
                     onClose={() => setShowNewEventModal(false)}
@@ -145,10 +145,10 @@ export default function WeeklyCalendar({
                             .filter((ev) => ev.day === dayIndex)
                             .map((ev) => (
                                 <DraggableEvent
-                                    key={ev.id}
+                                    key={ev._id}
                                     event={ev}
                                     onResize={(e, delta) =>
-                                        handleResize(e, delta, ev.id)
+                                        handleResize(e, delta, ev._id)
                                     }
                                     onDelete={handleDeleteEvent}
                                     onDuplicate={handleDuplicateEvent}

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { Schedule } from "../lib/types";
+import SubjectSelect from "./SubjectSelect";
 
 const tabs = [
     { key: "class", label: "Clase" },
@@ -25,6 +26,47 @@ interface NewEventModalProps {
     intervals: number;
     events: Schedule[];
 }
+const subjects = [
+    {
+        code: "EM1600",
+        name: "Tecnologías digitales aplicadas a la matemática educativa I",
+    },
+    { code: "EM1606", name: "Fundamentos de matemática II" },
+    { code: "EM1607", name: "Didáctica de la geometría" },
+    {
+        code: "EM1613",
+        name: "Tecnologías digitales aplicadas a la matemática educativa III",
+    },
+    { code: "EM1614", name: "Estadística inferencial" },
+    { code: "EM2408", name: "Aprendizaje y didáctica de la matemática" },
+    { code: "EM2603", name: "Cálculo y análisis I" },
+    { code: "EM2604", name: "Geometría I" },
+    { code: "EM2607", name: "Cálculo y análisis II" },
+    {
+        code: "EM2608",
+        name: "Elementos de análisis de datos y probabilidad",
+    },
+    {
+        code: "EM3048",
+        name: "Atención a la diversidad en la enseñanza y el aprendizaje de la matemática",
+    },
+    { code: "EM3409", name: "Práctica docente" },
+    { code: "EM3608", name: "Cálculo y análisis III" },
+    { code: "EM4010", name: "Programación lineal" },
+    { code: "EM4612", name: "Métodos numéricos" },
+    { code: "MA0101", name: "Matemática general" },
+    { code: "MA1102", name: "Cálculo diferencial e integral" },
+    { code: "MA1103", name: "Cálculo y álgebra lineal" },
+    { code: "MA1303", name: "Matemática básica para administración" },
+    { code: "MA1304", name: "Cálculo para administración" },
+    { code: "MA1403", name: "Matemática discreta" },
+    { code: "MA2104", name: "Cálculo superior" },
+    { code: "MA2105", name: "Ecuaciones diferenciales" },
+    { code: "MA2117", name: "Cálculo y geometría analítica" },
+    { code: "MA2404", name: "Probabilidades" },
+    { code: "MA3106", name: "Métodos numéricos" },
+    { code: "MA3405", name: "Estadística" },
+];
 
 const NewEventModal: React.FC<NewEventModalProps> = ({
     show,
@@ -36,20 +78,10 @@ const NewEventModal: React.FC<NewEventModalProps> = ({
     intervals,
     events,
 }) => {
-    const subjects = [
-        "Matemáticas",
-        "Física",
-        "Química",
-        "Historia",
-        "Lengua",
-        "Inglés",
-        "Programación",
-    ];
-
     // Estado para la duración máxima (debe ir antes de cualquier return)
     const [maxDuration, setMaxDuration] = React.useState(intervals);
 
-    const { register, handleSubmit, setValue, watch, reset } =
+    const { register, control, handleSubmit, setValue, watch, reset } =
         useForm<Schedule>({
             defaultValues: {
                 type: "class",
@@ -156,7 +188,7 @@ const NewEventModal: React.FC<NewEventModalProps> = ({
                         ? Math.min(newEventData.x + 10, window.innerWidth - 320)
                         : 100,
                     top: newEventData
-                        ? Math.min(newEventData.y, window.innerHeight - 350)
+                        ? Math.min(newEventData.y, window.innerHeight - 535)
                         : 100,
                 }}
                 onSubmit={handleSubmit(onSubmit)}
@@ -187,7 +219,7 @@ const NewEventModal: React.FC<NewEventModalProps> = ({
                         </button>
                     ))}
                 </div>
-                <section className="flex flex-col gap-2 p-4 max-h-[400px] overflow-y-auto">
+                <section className="flex flex-col gap-2 p-4 max-h-[400px] ">
                     {/* Common fields */}
 
                     <label>
@@ -200,6 +232,15 @@ const NewEventModal: React.FC<NewEventModalProps> = ({
                             className="w-full text-white border-1 rounded-lg border-hr focus:outline-secondary p-1"
                         />
                     </label>
+                    {(currentType === "consultation" ||
+                        currentType === "class") && (
+                        <SubjectSelect
+                            control={control}
+                            name={"subject"}
+                            subjects={subjects}
+                            rules={{ required: true }}
+                        />
+                    )}
                     <label>
                         <span className="text-dim">Duración:</span>
                         <input
@@ -219,22 +260,6 @@ const NewEventModal: React.FC<NewEventModalProps> = ({
                     {(currentType === "consultation" ||
                         currentType === "class") && (
                         <>
-                            <label>
-                                <span className="text-dim">Materia:</span>
-                                <select
-                                    {...register("subject", { required: true })}
-                                    className="w-full p-2 text-gray-500 bg-bgmain border border-hr rounded-lg cursor-pointer focus:outline-secondary"
-                                >
-                                    <option value="">
-                                        Selecciona una materia
-                                    </option>
-                                    {subjects.map((subject) => (
-                                        <option key={subject} value={subject}>
-                                            {subject}
-                                        </option>
-                                    ))}
-                                </select>
-                            </label>
                             <label>
                                 <span className="text-dim">Modalidad:</span>
                                 <select
@@ -271,22 +296,22 @@ const NewEventModal: React.FC<NewEventModalProps> = ({
                             )}
                         </>
                     )}
-                    <div className="flex gap-2 mt-2">
-                        <button
-                            type="submit"
-                            className="bg-green-500 text-white px-3 py-1 rounded"
-                        >
-                            Crear
-                        </button>
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="bg-gray-400 text-white px-3 py-1 rounded"
-                        >
-                            Cancelar
-                        </button>
-                    </div>
                 </section>
+                <div className="flex gap-2 mt-2 w-full justify-end p-4">
+                    <button
+                        type="submit"
+                        className="bg-green-500 text-white px-3 py-1 rounded"
+                    >
+                        Crear
+                    </button>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="bg-gray-400 text-white px-3 py-1 rounded"
+                    >
+                        Cancelar
+                    </button>
+                </div>
             </form>
         </>
     );

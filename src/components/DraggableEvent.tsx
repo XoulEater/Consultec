@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { Schedule } from "@/lib/types";
+import { Schedule, codeToName } from "@/lib/types";
 
 interface DraggableEventProps {
     event: Schedule;
@@ -22,7 +22,7 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
 }) => {
     const { attributes, listeners, setNodeRef, transform, isDragging } =
         useDraggable({
-            id: event.id,
+            id: event._id,
         });
     const [isResizing, setIsResizing] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -72,7 +72,7 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
     return (
         <div
             ref={setNodeRef}
-            data-event-id={event.id}
+            data-event-id={event._id}
             style={style}
             {...listeners}
             {...attributes}
@@ -182,7 +182,7 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        onDelete(event.id);
+                                        onDelete(event._id);
                                         setIsDropdownOpen(false);
                                     }}
                                     className="block w-full text-left px-4 py-2 text-sm hover:bg-neutral-700"
@@ -192,7 +192,7 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        if (onEdit) onEdit(event.id);
+                                        if (onEdit) onEdit(event._id);
                                         setIsDropdownOpen(false);
                                     }}
                                     className="block w-full text-left px-4 py-2 text-sm hover:bg-neutral-700"
@@ -202,7 +202,7 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        if (onDuplicate) onDuplicate(event.id);
+                                        if (onDuplicate) onDuplicate(event._id);
                                         setIsDropdownOpen(false);
                                     }}
                                     className="block w-full text-left px-4 py-2 text-sm hover:bg-neutral-700"
@@ -216,18 +216,18 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
 
                 {event.duration > 1 && (
                     <div className="p-2 pt-0 text-xs font-medium overflow-hidden">
-                        <p className="line-clamp-2">{event.subject}</p>
+                        <p className="line-clamp-2">
+                            {codeToName[event.subject]}
+                        </p>
                         <span className="opacity-80 ">
                             {`${Math.floor(event.start / 2) + 7}:${
                                 event.start % 2 === 0 ? "00" : "30"
                             }`}
                             <span className="mx-1 hidden md:inline">-</span>
                             <br className="md:hidden inline" />
-                            {`${
-                                Math.floor(event.start / 2) +
-                                Math.floor(event.duration / 2) +
-                                7
-                            }:${
+                            {`${Math.floor(
+                                event.start / 2 + event.duration / 2 + 7
+                            )}:${
                                 Math.floor(event.start + event.duration) % 2 ===
                                 0
                                     ? "00"

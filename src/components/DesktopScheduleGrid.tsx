@@ -1,4 +1,4 @@
-import { Schedule } from "@/lib/types";
+import { codeToName, Schedule } from "@/lib/types";
 import React from "react";
 
 export function DesktopScheduleGrid({
@@ -14,7 +14,7 @@ export function DesktopScheduleGrid({
     startHour: number;
     endHour: number;
     intervalHeight: number;
-    onEventClick: (id: string) => void;
+    onEventClick: (schedule: Schedule) => void;
 }) {
     const eventsByDay = days.map((_: string, i: number) =>
         schedules.filter((ev: Schedule) => ev.day === i)
@@ -64,13 +64,12 @@ export function DesktopScheduleGrid({
                     ))}
                     {/* Events for this day */}
                     {eventsByDay[dayIndex].map((schedule) => {
-                        const top =
-                            (schedule.start - startHour) * intervalHeight * 2;
-                        const height = schedule.duration * intervalHeight * 2;
+                        const top = schedule.start * intervalHeight;
+                        const height = schedule.duration * intervalHeight;
                         return (
                             <div
-                                onClick={() => onEventClick(schedule.id)}
-                                key={schedule.id}
+                                onClick={() => onEventClick(schedule)}
+                                key={schedule._id}
                                 className={`${
                                     schedule.type === "consultation"
                                         ? "bg-primary/80 border-blue-400/90"
@@ -90,17 +89,35 @@ export function DesktopScheduleGrid({
                             >
                                 <div className="justify-between text-md hidden sm:flex flex-col">
                                     <span className="line-clamp-1">
-                                        {schedule.subject}
+                                        <strong> {schedule.subject} </strong>
+                                        {codeToName[schedule.subject]}
                                     </span>
                                     <span className="opacity-80 ">
-                                        {`${schedule.start}:00`}
+                                        {`${
+                                            Math.floor(schedule.start / 2) + 7
+                                        }:${
+                                            schedule.start % 2 === 0
+                                                ? "00"
+                                                : "30"
+                                        }`}
                                         <span className="mx-1 hidden md:inline">
                                             -
                                         </span>
                                         <br className="md:hidden inline" />
-                                        {`${
-                                            schedule.start + schedule.duration
-                                        }:00`}
+                                        {`${Math.floor(
+                                            schedule.start / 2 +
+                                                schedule.duration / 2 +
+                                                7
+                                        )}:${
+                                            Math.floor(
+                                                schedule.start +
+                                                    schedule.duration
+                                            ) %
+                                                2 ===
+                                            0
+                                                ? "00"
+                                                : "30"
+                                        }`}
                                     </span>
                                 </div>
                             </div>

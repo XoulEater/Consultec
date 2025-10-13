@@ -1,9 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getTeacherById, updateTeacher, deleteTeacher } from "@/services/teacher.service";
+import {
+    getTeacherById,
+    updateTeacher,
+    deleteTeacher,
+} from "@/services/teacher.service";
 import { SignOutButton } from "@clerk/nextjs";
 import { Teacher } from "@/lib/types";
+
+import { useAppDispatch } from "@/store/hooks";
+import { showToast } from "@/store/toastSlice";
 
 interface FormData {
     name: string;
@@ -19,9 +26,9 @@ interface FormData {
 
 export function Information() {
     const router = useRouter();
+    const dispatch = useAppDispatch();
     const [teacherId, setTeacherId] = useState<string | null>(null);
     const [teacherData, setTeacherData] = useState<Teacher | null>(null);
-
 
     const [alignment, setAlignment] = useState("web");
     const [loading, setLoading] = useState(true);
@@ -70,23 +77,29 @@ export function Information() {
             setLoading(true);
             const teacherResponse = await getTeacherById(teacherId);
             setTeacherData(teacherResponse);
-            
+
             // Imprimir los datos del profesor en consola para debug
             console.log("Datos completos del profesor:", teacherResponse);
-            
+
             // Mapear TODOS los datos del profesor al formulario
             setFormData({
                 name: teacherResponse.name || "",
                 correo: teacherResponse.correo || teacherResponse.email || "",
-                oficina: teacherResponse.oficina || teacherResponse.office || "",
-                telefono: teacherResponse.telefono || teacherResponse.officePhone || "",
-                campus: teacherResponse.campus || teacherResponse.location || "",
+                oficina:
+                    teacherResponse.oficina || teacherResponse.office || "",
+                telefono:
+                    teacherResponse.telefono ||
+                    teacherResponse.officePhone ||
+                    "",
+                campus:
+                    teacherResponse.campus || teacherResponse.location || "",
                 school: teacherResponse.school || "",
-                cathedra: teacherResponse.cathedra || teacherResponse.subject || "",
+                cathedra:
+                    teacherResponse.cathedra || teacherResponse.subject || "",
                 type: teacherResponse.type || teacherResponse.role || "",
                 userID: teacherResponse.userID || teacherResponse._id || "",
             });
-            
+
             setError(null);
         } catch (err) {
             console.error("Error loading teacher data:", err);
@@ -103,7 +116,9 @@ export function Information() {
         }
     }, [teacherId]);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleInputChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    ) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
             ...prevData,
@@ -120,14 +135,24 @@ export function Information() {
 
     const handleSave = async () => {
         if (!teacherId) return;
-        
+
         try {
             setSaving(true);
             await updateTeacher(teacherId, formData);
-            alert("Información guardada exitosamente");
+            dispatch(
+                showToast({
+                    message: "Información guardada exitosamente",
+                    type: "success",
+                })
+            );
         } catch (error) {
             console.error("Error saving teacher data:", error);
-            alert("Error al guardar la información");
+            dispatch(
+                showToast({
+                    message: "Error al guardar la información",
+                    type: "error",
+                })
+            );
         } finally {
             setSaving(false);
         }
@@ -145,7 +170,9 @@ export function Information() {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-64">
-                <div className="text-lg">Cargando información del profesor...</div>
+                <div className="text-lg">
+                    Cargando información del profesor...
+                </div>
             </div>
         );
     }
@@ -185,8 +212,6 @@ export function Information() {
                     <h2 className="text-2xl font-semibold">Perfil Completo</h2>
                 </div>
 
-
-
                 <form className="mt-5 space-y-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
                     {/* Role/Type */}
                     <div className="lg:col-span-2">
@@ -202,7 +227,9 @@ export function Information() {
                                     value="Profesor"
                                     className="hidden peer"
                                     checked={formData.type === "Profesor"}
-                                    onChange={(e) => handleRoleChange(e.target.value)}
+                                    onChange={(e) =>
+                                        handleRoleChange(e.target.value)
+                                    }
                                 />
                                 <label
                                     htmlFor="profesor"
@@ -221,15 +248,15 @@ export function Information() {
                                     value="Tutor"
                                     className="hidden peer"
                                     checked={formData.type === "Tutor"}
-                                    onChange={(e) => handleRoleChange(e.target.value)}
+                                    onChange={(e) =>
+                                        handleRoleChange(e.target.value)
+                                    }
                                 />
                                 <label
                                     htmlFor="tutor"
                                     className="flex items-center justify-between w-full p-3 text-gray-500 bg-bgmain border border-hr rounded-lg cursor-pointer peer-checked:border-primary peer-checked:text-primary hover:text-gray-600 hover:bg-bghover"
                                 >
-                                    <span className="font-semibold">
-                                        Tutor
-                                    </span>
+                                    <span className="font-semibold">Tutor</span>
                                 </label>
                             </li>
                         </ul>
@@ -277,9 +304,7 @@ export function Information() {
 
                     {/* Teléfono */}
                     <div>
-                        <label className="block text-dim">
-                            Teléfono*
-                        </label>
+                        <label className="block text-dim">Teléfono*</label>
                         <input
                             type="text"
                             name="telefono"
@@ -292,7 +317,7 @@ export function Information() {
                     {/* Campus */}
                     <div>
                         <label className="block text-dim">Campus*</label>
-                        <select 
+                        <select
                             className="w-full p-3 text-gray-500 bg-bgmain border border-hr rounded-lg cursor-pointer focus:outline-primary"
                             name="campus"
                             value={formData.campus}
@@ -354,13 +379,11 @@ export function Information() {
                             </option>
                         </select>
                     </div>
-
-
                 </form>
 
                 {/* Action Buttons */}
                 <div className="mt-10 flex justify-end gap-4">
-                    <button 
+                    <button
                         className="px-4 py-2 bg-dim text-white rounded-md flex items-center hover:bg-dim/80 gap-2 transition-all duration-300"
                         onClick={loadTeacherData}
                         disabled={loading}
@@ -377,7 +400,7 @@ export function Information() {
                     >
                         <img src="/icons/save.svg" alt="icon" />
                         <span className="text-sm font-semibold">
-                            {saving ? 'Guardando...' : 'Guardar'}
+                            {saving ? "Guardando..." : "Guardar"}
                         </span>
                     </button>
                     <SignOutButton>

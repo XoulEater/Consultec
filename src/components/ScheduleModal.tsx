@@ -1,4 +1,4 @@
-import { Schedule, ScheduleDetail } from "@/lib/types";
+import { codeToName, Schedule, ScheduleDetail } from "@/lib/types";
 import { getScheduleById } from "@/services/schedule.service";
 import { useEffect, useRef, useState } from "react";
 
@@ -12,28 +12,13 @@ const translateType = {
 type Props = {
     onClose: () => void;
     onOk: () => void;
-    scheduleID?: string | null;
+    schedule?: Schedule | null;
 };
 
 const DAYS = [, "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
-function ScheduleModal({ onClose, onOk, scheduleID }: Props) {
+function ScheduleModal({ onClose, onOk, schedule }: Props) {
     const modalRef = useRef<HTMLDivElement>(null);
-
-    const [schedule, setSchedule] = useState<ScheduleDetail | null>(null);
-
-    useEffect(() => {
-        if (scheduleID) {
-            const response = getScheduleById(scheduleID);
-            response
-                .then((data) => {
-                    setSchedule(data);
-                })
-                .catch((error) => {
-                    console.error("Error fetching schedule:", error);
-                });
-        }
-    }, [scheduleID]);
 
     const handleClickOutside = (event: MouseEvent) => {
         if (
@@ -55,9 +40,10 @@ function ScheduleModal({ onClose, onOk, scheduleID }: Props) {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 ">
+            <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
             <div
                 ref={modalRef}
-                className={`bg-bgmain/80   backdrop-blur-md border-t-4 pb-10 p-6 
+                className={`bg-bgmain/90  backdrop-blur-md border-t-4 pb-10 p-6 
                     ${
                         schedule.type === "consultation"
                             ? "border-primary/90"
@@ -66,11 +52,11 @@ function ScheduleModal({ onClose, onOk, scheduleID }: Props) {
                             : schedule.type === "telecommuting"
                             ? "border-rose-400/90"
                             : "border-gray-400/90"
-                    } rounded-md ring-black/10 ring-2  flex flex-col gap-6  w-full max-w-md`}
+                    } rounded-md ring-black/10 ring-2  flex flex-col gap-6  w-full max-w-lg`}
             >
-                <header className="text-xl font-medium flex justify-between">
+                <header className="text-xl font-medium flex justify-between items-start">
                     <span>{`${translateType[schedule.type]}: ${
-                        schedule.curso
+                        codeToName[schedule.subject]
                     }`}</span>
                     <button
                         className="cursor-pointer"
@@ -82,13 +68,13 @@ function ScheduleModal({ onClose, onOk, scheduleID }: Props) {
                     </button>
                 </header>
 
-                {schedule.enlace && (
+                {schedule.link && (
                     <>
                         <hr className="border-hr" />
                         <section className="">
                             <a
                                 className="group relative inline-flex py-2  items-center justify-center overflow-hidden rounded-md bg-primary px-4 font-medium text-neutral-200 duration-70000"
-                                href={schedule.enlace}
+                                href={schedule.link}
                                 target="_blank"
                             >
                                 <div className="relative inline-flex -translate-x-0 items-center transition group-hover:translate-x-6">
@@ -109,20 +95,27 @@ function ScheduleModal({ onClose, onOk, scheduleID }: Props) {
                     <div className="flex flex-row gap-4">
                         <img src="/icons/time.svg" alt="" />
                         <span>
-                            {`${DAYS[schedule.dia]},
-                             de ${schedule.horaInicio} a ${
-                                schedule.horaFin
+                            {`${DAYS[schedule.day]},
+                             de ${Math.floor(schedule.start / 2) + 7}:${
+                                schedule.start % 2 === 0 ? "00" : "30"
                             }`}{" "}
+                            a{" "}
+                            {`${Math.floor(
+                                schedule.start / 2 + schedule.duration / 2 + 7
+                            )}:${
+                                Math.floor(schedule.start + schedule.duration) %
+                                    2 ===
+                                0
+                                    ? "00"
+                                    : "30"
+                            }`}
                         </span>
                     </div>
                     <hr className="border-hr" />
                     <div className="flex flex-row gap-4">
                         <img src="/icons/location.svg" alt="" />
                         <span>
-                            {schedule.lugar}{" "}
-                            {schedule.modalidad
-                                ? `(${schedule.modalidad})`
-                                : "Virtual"}
+                            {schedule.location} {schedule.modality}
                         </span>
                     </div>
                 </section>

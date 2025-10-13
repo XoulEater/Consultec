@@ -179,12 +179,13 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
 
     return (
         <>
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-sm z-10" />
             <div
                 ref={modalRef}
                 className=" h-11/12 w-full  lg:h-5/6 lg:w-2/5 fixed  inset-1/2 z-50 flex items-center justify-center  -translate-1/2  "
             >
                 <div
-                    className="bg-bgmain/50 border-t-4 border-t-primary/90
+                    className="bg-bgmain/90 border-t-4 border-t-primary/90
                  backdrop-blur-md rounded-xl h-full w-full flex flex-col p-4 "
                 >
                     <header>

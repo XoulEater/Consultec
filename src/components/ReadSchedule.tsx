@@ -7,7 +7,7 @@ import { DesktopScheduleGrid } from "./DesktopScheduleGrid";
 
 export function ReadSchedule({ schedules }: { schedules: Schedule[] }) {
     const [showModal, setShowModal] = useState(false);
-    const [selectedSchedule, setSelectedSchedule] = useState<string | null>(
+    const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(
         null
     );
     const [isMobile, setIsMobile] = useState(false);
@@ -31,12 +31,8 @@ export function ReadSchedule({ schedules }: { schedules: Schedule[] }) {
         return () => window.removeEventListener("resize", checkMobile);
     }, []);
 
-    const handleClickSchedule = (idx: number) => {
-        setSelectedSchedule(schedules[idx].id); // This line remains unchanged
-        setShowModal(true);
-    };
-    const handleClickScheduleById = (id: string) => {
-        setSelectedSchedule(id);
+    const handleClickSchedule = (schedule: Schedule) => {
+        setSelectedSchedule(schedule);
         setShowModal(true);
     };
 
@@ -44,7 +40,7 @@ export function ReadSchedule({ schedules }: { schedules: Schedule[] }) {
         <main className="min-w-80">
             {showModal && (
                 <ScheduleModal
-                    scheduleID={selectedSchedule}
+                    schedule={selectedSchedule}
                     onClose={() => setShowModal(false)}
                     onOk={() => setShowModal(false)}
                 />
@@ -53,7 +49,7 @@ export function ReadSchedule({ schedules }: { schedules: Schedule[] }) {
                 <MobileScheduleList
                     schedules={schedules}
                     days={days}
-                    onEventClick={handleClickScheduleById}
+                    onEventClick={handleClickSchedule}
                 />
             ) : (
                 <DesktopScheduleGrid
@@ -62,7 +58,7 @@ export function ReadSchedule({ schedules }: { schedules: Schedule[] }) {
                     startHour={startHour}
                     endHour={endHour}
                     intervalHeight={intervalHeight}
-                    onEventClick={handleClickScheduleById}
+                    onEventClick={handleClickSchedule}
                 />
             )}
         </main>
