@@ -3,14 +3,18 @@ import { Searchbar } from "@/components/Searchbar";
 import { Table } from "@/components/Table";
 import { Suspense, useEffect, useState } from "react";
 import { getTeachers } from "@/services/teacher.service";
-import { TeachersTable } from "@/lib/types";
+import { TeacherContactInfo, TeachersTable } from "@/lib/types";
 import { useSearchParams } from "next/navigation";
+import TeacherContactModal from "@/components/TeacherContactModal";
+
+
 
 export default function Home() {
     const [teachers, setTeachers] = useState<TeachersTable[] | undefined>();
     const [searchParams, setSearchParams] = useState<string | undefined>();
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    const [selectedContact, setSelectedContact] = useState<TeacherContactInfo | null>(null);
 
     useEffect(() => {
         const fetchTeachers = async () => {
@@ -59,8 +63,17 @@ export default function Home() {
                         currentPage={currentPage}
                         totalPages={totalPages}
                         onPageChange={handlePageChange}
+                        onContactSelect={setSelectedContact}
                     />
                 </div>
+
+                {/* Teacher Contact Modal */}
+                {selectedContact && (
+                    <TeacherContactModal
+                        onClose={() => setSelectedContact(null)}
+                        contact={selectedContact}
+                    />
+                )}
             </SearchParamsWrapper>
         </Suspense>
     );

@@ -1,6 +1,8 @@
 "use client";
 import { TeachersTable } from "@/lib/types";
 import Link from "next/link";
+import { TeacherContactInfo } from "@/lib/types";
+import { getTeacherById } from "@/services/teacher.service";
 
 const days = ["L", "K", "M", "J", "V", "S"];
 
@@ -9,13 +11,30 @@ interface TableProps {
     currentPage: number;
     totalPages: number;
     onPageChange: (page: number) => void;
+    onContactSelect: (contact: any) => void;
 }
+
+const getTeacherContactInfo = async (teacherId: string): Promise<TeacherContactInfo | null> => {
+    try {
+        const teacher = await getTeacherById(teacherId);
+        return {
+            name: teacher.name,
+            email: teacher.correo,
+            office: teacher.oficina,
+            phone: teacher.telefono,
+        };
+    } catch (error) {
+        console.error("Failed to fetch teacher contact info:", error);
+        return null;
+    }
+};
 
 export function Table({
     teachers,
     currentPage,
     totalPages,
     onPageChange,
+    onContactSelect
 }: TableProps) {
     if (teachers === undefined) {
         return (
@@ -53,7 +72,22 @@ export function Table({
                         key={index}
                         href={`browse/${teacher.id}`}
                     >
-                        <div className="lg:col-span-1  line-clamp-1">
+                        <div className="lg:col-span-1  line-clamp-1 flex items-center">
+                            <button
+                                className="me-2 relative z-10 cursor-pointer"
+                                title="Ver información de contacto del profesor"
+                                onClick={async (e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    const contactInfo = await getTeacherContactInfo(teacher.id);
+                                    if (contactInfo) {
+                                        onContactSelect(contactInfo);
+                                    }
+                                }}
+                            >
+                                <img src="/icons/contact-info.svg" alt="Información de contacto del profesor" />
+                            </button>
+
                             {teacher.teacher}
                         </div>
                         <div className="lg:order-none order-3 line-clamp-1 lg:col-span-1 col-span-2 text-sm text-dim lg:text-base lg:text-main">
