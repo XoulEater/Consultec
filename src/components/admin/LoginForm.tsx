@@ -185,6 +185,16 @@ export default function LoginForm() {
                 </span>
             </div>
 
+            <div className="w-full flex justify-center">
+                <button
+                    type="button"
+                    onClick={() => router.push('/passwordRecovery')}
+                    className="text-sm text-dim underline hover:text-main"
+                >
+                    ¿Olvidó su contraseña?
+                </button>
+            </div>
+
             <button
                 className="group relative inline-flex min-h-10 items-center justify-center overflow-hidden w-[300px] rounded-md bg-gradient px-6 font-medium text-neutral-200 duration-500"
                 type="submit"
@@ -212,7 +222,4 @@ export default function LoginForm() {
             </button>
         </form>
     );
-}
-function dispatch(arg0: any) {
-    throw new Error("Function not implemented.");
 }
