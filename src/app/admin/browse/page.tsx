@@ -91,6 +91,7 @@ export default function Home() {
                         currentPage={currentPage}
                         totalPages={totalPages}
                         onPageChange={handlePageChange}
+                        onContactSelect={() => {}}
                     />
                 </div>
             </SearchParamsWrapper>
