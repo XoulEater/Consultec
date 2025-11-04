@@ -15,71 +15,71 @@ export default function LoginForm() {
     const [showPassword, setShowPassword] = useState(false);
     const { isLoaded, signIn, setActive } = useSignIn();
     const { isSignedIn } = useAuth();
-  
-    const { register, handleSubmit, formState: { errors } } = useForm();
 
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
 
     useEffect(() => {
         if (isSignedIn) {
-        dispatch(
-            showToast({
-            message: "Ya tienes una sesión activa",
-            type: "info",
-            })
-        );
-        router.replace("/admin/browse");
+            dispatch(
+                showToast({
+                    message: "Ya tienes una sesión activa",
+                    type: "info",
+                })
+            );
+            router.replace("/admin/browse");
         }
     }, [isSignedIn, dispatch, router]);
 
     const onSubmit = async (data: any) => {
-
-        
         if (!isLoaded) return; // Clerk todavía no está listo
 
         try {
-        const result = await signIn.create({
-            identifier: data.email,
-            password: data.password,
-        });
+            const result = await signIn.create({
+                identifier: data.email,
+                password: data.password,
+            });
 
-        if (result.status === "complete") {
-            
-            await setActive({ session: result.createdSessionId });
-            
-            dispatch(
-            showToast({
-                message: "Inicio de sesión exitoso",
-                type: "success",
-            })
-            );
+            if (result.status === "complete") {
+                await setActive({ session: result.createdSessionId });
 
-            const teacher = await getTeacherByEmail(data.email);
-            if (teacher?._id) {
-            localStorage.setItem("teacherId", teacher._id);
-}
+                dispatch(
+                    showToast({
+                        message: "Inicio de sesión exitoso",
+                        type: "success",
+                    })
+                );
 
-            router.push("/admin/browse");
-        } else {
-            console.log("SignIn result:", result);
-            dispatch(
-            showToast({
-                message: "Se requiere verificación adicional",
-                type: "info",
-            })
-            );
-        }
+                const teacher = await getTeacherByEmail(data.email);
+                if (teacher?._id) {
+                    localStorage.setItem("teacherId", teacher._id);
+                }
+
+                router.push("/admin/browse");
+            } else {
+                console.log("SignIn result:", result);
+                dispatch(
+                    showToast({
+                        message: "Se requiere verificación adicional",
+                        type: "info",
+                    })
+                );
+            }
         } catch (err: any) {
-        console.error("Error en login", err.errors);
-        dispatch(
-            showToast({
-            message: err.errors?.[0]?.message || "Credenciales incorrectas",
-            type: "error",
-            })
-        );
+            console.error("Error en login", err.errors);
+            dispatch(
+                showToast({
+                    message:
+                        err.errors?.[0]?.message || "Credenciales incorrectas",
+                    type: "error",
+                })
+            );
         }
     };
 
-    
     return (
         <form
             className="flex flex-col gap-4 items-center w-full"
@@ -144,7 +144,7 @@ export default function LoginForm() {
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="#898989"
-                                stroke-width="1"
+                                strokeWidth="1"
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                             >
@@ -161,7 +161,7 @@ export default function LoginForm() {
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="#898989"
-                                stroke-width="1"
+                                strokeWidth="1"
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                             >

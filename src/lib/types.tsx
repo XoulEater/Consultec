@@ -162,3 +162,5 @@ export const codeToName: Record<string, string> = {
     MA3106: "Métodos numéricos",
     MA3405: "Estadística",
 };
+
+

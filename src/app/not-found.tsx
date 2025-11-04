@@ -15,6 +15,11 @@ export default function Home() {
                     Regresar al inicio
                 </button>
             </Link>
+            <Link href="/login">
+                <button className="bg-secondary  text-light font-bold py-2 px-4 rounded-md transition-all duration-300 ease-in-out [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
+                    Ir a login
+                </button>
+            </Link>
         </div>
     );
 }

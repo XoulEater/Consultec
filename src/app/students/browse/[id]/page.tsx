@@ -14,18 +14,22 @@ export default function Home() {
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
+        if (!id) return;
         const fetchSchedule = async () => {
             try {
-                // sleep for 1 second to simulate loading
+
+                setLoading(true); // Set loading to true before fetching
 
                 let data = await getScheduleByTeacherId(id as string);
-                data = data.filter((item) => item.type === "consultation"); // Filter out empty schedules
-                setSchedule(data);
-                console.log("Fetched schedule:", data); // Debugging line
 
-                setLoading(false); // Set loading to false after fetching
+                console.log("Fetched schedule data:", data);
+
+                setSchedule(data.filter((item) => item.type === "consultation"));
+
             } catch (error) {
                 console.error("Failed to fetch schedule:", error);
+            } finally {
+                setLoading(false); // Set loading to false after fetching
             }
         };
         const fetchName = async () => {
