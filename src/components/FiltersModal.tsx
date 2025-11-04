@@ -29,6 +29,49 @@ const campus = [
     { id: 5, name: "Limón" },
 ];
 
+
+const subjects = [
+    {
+        code: "EM1600",
+        name: "Tecnologías digitales aplicadas a la matemática educativa I",
+    },
+    { code: "EM1606", name: "Fundamentos de matemática II" },
+    { code: "EM1607", name: "Didáctica de la geometría" },
+    {
+        code: "EM1613",
+        name: "Tecnologías digitales aplicadas a la matemática educativa III",
+    },
+    { code: "EM1614", name: "Estadística inferencial" },
+    { code: "EM2408", name: "Aprendizaje y didáctica de la matemática" },
+    { code: "EM2603", name: "Cálculo y análisis I" },
+    { code: "EM2604", name: "Geometría I" },
+    { code: "EM2607", name: "Cálculo y análisis II" },
+    {
+        code: "EM2608",
+        name: "Elementos de análisis de datos y probabilidad",
+    },
+    {
+        code: "EM3048",
+        name: "Atención a la diversidad en la enseñanza y el aprendizaje de la matemática",
+    },
+    { code: "EM3409", name: "Práctica docente" },
+    { code: "EM3608", name: "Cálculo y análisis III" },
+    { code: "EM4010", name: "Programación lineal" },
+    { code: "EM4612", name: "Métodos numéricos" },
+    { code: "MA0101", name: "Matemática general" },
+    { code: "MA1102", name: "Cálculo diferencial e integral" },
+    { code: "MA1103", name: "Cálculo y álgebra lineal" },
+    { code: "MA1303", name: "Matemática básica para administración" },
+    { code: "MA1304", name: "Cálculo para administración" },
+    { code: "MA1403", name: "Matemática discreta" },
+    { code: "MA2104", name: "Cálculo superior" },
+    { code: "MA2105", name: "Ecuaciones diferenciales" },
+    { code: "MA2117", name: "Cálculo y geometría analítica" },
+    { code: "MA2404", name: "Probabilidades" },
+    { code: "MA3106", name: "Métodos numéricos" },
+    { code: "MA3405", name: "Estadística" },
+];
+
 export default function FiltersModal({ onClose, onOk, filters }: Props) {
     const [selectedModality, setSelectedModality] = useState("Cualquiera");
     const [hourRange, setHourRange] = useState<[number, number]>([7, 21]); // Rango inicial de horas
@@ -39,6 +82,7 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
         Cathedra | undefined
     >();
     const [selectedCampus, setSelectedCampus] = useState<string>("");
+    const [selectedSubject, setSelectedSubject] = useState<string>("");
 
     // Si se pasan filtros, inicializa el estado con esos filtros
     useEffect(() => {
@@ -64,6 +108,9 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
             const cathedraFilter = filters.filters.find(
                 (filter) => filter.name === "cathedra"
             );
+            const subjectFilter = filters.filters.find(
+                (filter) => filter.name === "subject"
+            );
 
             if (modalityFilter) {
                 setSelectedModality(modalityFilter.value);
@@ -80,6 +127,10 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
             }
             if (campusFilter) {
                 setSelectedCampus(campusFilter.value);
+            }
+
+            if (subjectFilter) {
+                setSelectedSubject(subjectFilter.value);
             }
             if (schoolFilter) {
                 const schoolName = schoolFilter.value;
@@ -154,6 +205,15 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
                 name: "campus",
                 value: selectedCampus,
                 label: selectedCampus,
+            });
+        }
+
+        if (selectedSubject) {
+            const subj = subjects.find((s) => s.code === selectedSubject);
+            filters.push({
+                name: "subject",
+                value: selectedSubject,
+                label: `${subj?.name || selectedSubject}`,
             });
         }
 
@@ -447,6 +507,23 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
                             </ul>
                         </section>
                         {/* Campus select */}
+                        {/* Curso select */}
+                        <section className="flex flex-col gap-3 py-6 border-b-2 px-4 border-hr">
+                            <h2 className="text-lg font-semibold">Curso</h2>
+                            <select
+                                className="w-full lg:w-1/2 p-3 text-gray-500 bg-bgmain border border-hr rounded-lg cursor-pointer focus:outline-primary"
+                                value={selectedSubject}
+                                onChange={(e) => setSelectedSubject(e.target.value)}
+                            >
+                                <option value="">Selecciona un curso</option>
+                                {subjects.map((s) => (
+                                    <option key={`subject-${s.code}`} value={s.code}>
+                                        {s.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </section>
+
                         <section className="flex flex-col gap-3 py-6 border-b-2 px-4 border-hr">
                             <h2 className="text-lg font-semibold">Campus</h2>
                             <select
