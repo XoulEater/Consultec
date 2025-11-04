@@ -42,32 +42,38 @@ export const updateSchedule = async (
 };
 
 export const getExcelByTeacherId = async (id: string, token: string | null) => {
-    try {
-        const response = await axios.get<ArrayBuffer>(
-            `/api/schedule-excel/${id}`,
-            {
-                responseType: "arraybuffer",
-                headers: {
-                    Authorization: `Bearer ${token}`, // Mandamos token desde el componente
-                },
-            }
-        );
+  try {
+    const response = await axios.get<ArrayBuffer>(`/api/excel/${id}`, {
+      responseType: "arraybuffer",
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-        const blob = new Blob([response.data], {
-            type: "application/vnd.ms-excel",
-        });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", `horario-${id}.xlsx`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    } catch (error) {
-        console.error(
-            `Error downloading Excel for teacher with id ${id}:`,
-            error
-        );
-        throw error;
-    }
+    // extraer filename del header Content-Disposition
+        const cd = response.headers["content-disposition"];
+        const getFilenameFromCD = (cdHeader: string | null | undefined): string | null => {
+          if (!cdHeader) return null;
+          // soporta filename*=UTF-8''... y filename="..."
+          const fnStar = /filename\*=UTF-8''([^;]+)/i.exec(cdHeader);
+          if (fnStar) return decodeURIComponent(fnStar[1]);
+          const fn = /filename=\"?([^;\"]+)\"?/i.exec(cdHeader);
+          if (fn) return fn[1];
+          return null;
+        };
+        const filename = getFilenameFromCD(cd) || `horario-${id}.xlsx`;
+
+    const blob = new Blob([response.data], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename; // usa el nombre del servidor o fallback
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error(`Error downloading Excel for teacher with id ${id}:`, error);
+    throw error;
+  }
 };

@@ -1,20 +1,26 @@
 "use client";
 import { Searchbar } from "@/components/Searchbar";
 import { Table } from "@/components/Table";
-import { TeachersTable } from "@/lib/types";
+import { TeachersTable, TeacherContactInfo } from "@/lib/types";
 import { getExcelByTeacherId } from "@/services/schedule.service";
 import { getTeachers } from "@/services/teacher.service";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { SignOutButton } from "@clerk/nextjs";
+import { useDispatch } from "react-redux";
+import { showToast } from "@/store/toastSlice";
+import TeacherContactModal from "@/components/TeacherContactModal";
+
 
 export default function Home() {
     const [teachers, setTeachers] = useState<TeachersTable[] | undefined>();
     const [searchParams, setSearchParams] = useState<string | undefined>();
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    const [selectedContact, setSelectedContact] = useState<TeacherContactInfo | null>(null);
     const { getToken } = useAuth(); 
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchTeachers = async () => {
@@ -43,11 +49,21 @@ export default function Home() {
 
     const handleDownloadExcel = async () => {
         try {
-        const token = await getToken({ template: "Consultec" });
-        await getExcelByTeacherId("680f083ea4c49105539a8ffa", token);
-        console.log("Excel downloaded successfully");
+            const teacherId = localStorage.getItem("teacherId");
+            if (!teacherId) {
+                dispatch(
+                    showToast({ message: "No hay un profesor guardado en la sesión.", type: "error" })
+                );
+                return;
+            }
+
+            const token = await getToken({ template: "Consultec" });
+            await getExcelByTeacherId(teacherId, token);
+            dispatch(showToast({ message: "Excel descargado correctamente.", type: "success" }));
+            console.log("Excel downloaded successfully");
         } catch (error) {
-        console.error("Error downloading Excel:", error);
+            console.error("Error downloading Excel:", error);
+            dispatch(showToast({ message: "Error al descargar el Excel.", type: "error" }));
         }
     };
     return (
@@ -76,7 +92,7 @@ export default function Home() {
                             </button>
                             <SignOutButton>
                                 <button
-                                    className="bg-gradient text-white px-4 py-2 rounded-md"
+                                    className="bg-gradient text-white px-4 py-2 rounded-md flex flex-row items-center gap-2 hover:scale-105 transition-all duration-300"
                                     onClick={() => localStorage.removeItem("teacherId")}
                                 >
                                     Cerrar sesión
@@ -91,8 +107,16 @@ export default function Home() {
                         currentPage={currentPage}
                         totalPages={totalPages}
                         onPageChange={handlePageChange}
+                        onContactSelect={setSelectedContact}
                     />
                 </div>
+
+                {/* Teacher Contact Modal */}
+                {selectedContact && (
+                    <TeacherContactModal
+                        onClose={() => setSelectedContact(null)}
+                        contact={selectedContact}
+                    />)}
             </SearchParamsWrapper>
         </Suspense>
     );

@@ -32,7 +32,7 @@ export default function Schedule() {
             const data =
                 response.map((item) => ({
                     ...item,
-                    name: item.name || "Evento",
+                    name: item.subject || "Evento",
                 })) || [];
             const draftStr = sessionStorage.getItem("calendar-draft");
             const originalStr = sessionStorage.getItem("calendar-original");

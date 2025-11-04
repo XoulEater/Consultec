@@ -163,4 +163,9 @@ export const codeToName: Record<string, string> = {
     MA3405: "Estadística",
 };
 
-
+export interface TeacherContactInfo {
+    name: string;
+    email: string;
+    office: string;
+    phone: string;
+}
