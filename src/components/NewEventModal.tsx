@@ -9,6 +9,8 @@ const tabs = [
     { key: "consultation", label: "Consulta" },
     { key: "telecommuting", label: "Teletrabajo" },
     { key: "other", label: "Otro" },
+    { key: "extern", label: "Externo" },
+
 ];
 
 interface NewEventModalProps {
@@ -106,12 +108,21 @@ const NewEventModal: React.FC<NewEventModalProps> = ({
     useEffect(() => {
         if (!show) return;
         const subscription = watch((values) => {
+            // Si el tipo es extern u other, sincronizar el campo subject con name
+            if (
+                (values.type === "extern" || values.type === "other") &&
+                values.name !== undefined &&
+                values.subject !== values.name
+            ) {
+                // Actualiza el valor del form para que al enviar venga en subject
+                setValue("subject", values.name as any);
+            }
             if (onFormChange) {
                 onFormChange(values);
             }
         });
         return () => subscription.unsubscribe();
-    }, [watch, onFormChange, show]);
+    }, [watch, onFormChange, show, setValue]);
 
     useEffect(() => {
         if (show) {
@@ -181,6 +192,8 @@ const NewEventModal: React.FC<NewEventModalProps> = ({
                         ? "border-primary"
                         : currentType === "telecommuting"
                         ? "border-yellow-500"
+                        : currentType === "other"
+                        ? "border-red-500"
                         : "border-gray-500"
                 }`}
                 style={{
@@ -191,7 +204,13 @@ const NewEventModal: React.FC<NewEventModalProps> = ({
                         ? Math.min(newEventData.y, window.innerHeight - 535)
                         : 100,
                 }}
-                onSubmit={handleSubmit(onSubmit)}
+                onSubmit={handleSubmit((data) => {
+                    // Al enviar, si el tipo es extern u other, guardar name en subject
+                    if ((data.type === "extern" || data.type === "other") && data.name) {
+                        data.subject = data.name;
+                    }
+                    onSubmit(data);
+                })}
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Tabs */}
@@ -202,12 +221,14 @@ const NewEventModal: React.FC<NewEventModalProps> = ({
                             key={tab.key}
                             className={` flex-1 py-2  ${
                                 currentType === tab.key
-                                    ? currentType === "class"
+                                    ? tab.key === "class"
                                         ? "bg-green-500"
-                                        : currentType === "consultation"
+                                        : tab.key === "consultation"
                                         ? "bg-primary"
-                                        : currentType === "telecommuting"
+                                        : tab.key === "telecommuting"
                                         ? "bg-yellow-500"
+                                        : tab.key === "other"
+                                        ? "bg-red-500"
                                         : "bg-gray-500"
                                     : "bg-bghover "
                             }`}

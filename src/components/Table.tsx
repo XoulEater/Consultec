@@ -54,7 +54,7 @@ export function Table({
                 p-3 px-5 bg-bghover font-semibold rounded-t-lg "
                 >
                     {/* Headers */}
-                    <div className=" text-dim ">Impartido por</div>
+                    <div className=" text-dim ">Contacto</div>
                     <div className=" text-dim ">Escuela/Catedra</div>
                     <div className=" text-dim ">Disponibilidad</div>
                     <div className=" text-dim ">Ultima Acualización</div>
