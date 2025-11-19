@@ -14,7 +14,9 @@ interface TableProps {
     onContactSelect: (contact: any) => void;
 }
 
-const getTeacherContactInfo = async (teacherId: string): Promise<TeacherContactInfo | null> => {
+const getTeacherContactInfo = async (
+    teacherId: string
+): Promise<TeacherContactInfo | null> => {
     try {
         const teacher = await getTeacherById(teacherId);
         return {
@@ -34,7 +36,7 @@ export function Table({
     currentPage,
     totalPages,
     onPageChange,
-    onContactSelect
+    onContactSelect,
 }: TableProps) {
     if (teachers === undefined) {
         return (
@@ -74,18 +76,22 @@ export function Table({
                     >
                         <div className="lg:col-span-1  line-clamp-1 flex items-center">
                             <button
-                                className="me-2 relative z-10 cursor-pointer"
+                                className="me-2 relative cursor-pointer"
                                 title="Ver información de contacto del profesor"
                                 onClick={async (e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
-                                    const contactInfo = await getTeacherContactInfo(teacher.id);
+                                    const contactInfo =
+                                        await getTeacherContactInfo(teacher.id);
                                     if (contactInfo) {
                                         onContactSelect(contactInfo);
                                     }
                                 }}
                             >
-                                <img src="/icons/contact-info.svg" alt="Información de contacto del profesor" />
+                                <img
+                                    src="/icons/contact-info.svg"
+                                    alt="Información de contacto del profesor"
+                                />
                             </button>
 
                             {teacher.teacher}

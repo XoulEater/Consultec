@@ -12,17 +12,21 @@ export function NavBar({
 }) {
     const [showSidebar, setShowSidebar] = useState(false); // Estado para controlar la visibilidad de la barra lateral
     const sidebarRef = useRef<HTMLDivElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
 
     // Click outside logic for mobile sidebar
     useEffect(() => {
         if (!showSidebar) return;
         function handleClickOutside(event: MouseEvent) {
+            const target = event.target as Node;
+            // Ignore clicks inside the sidebar or on the toggle button
             if (
-                sidebarRef.current &&
-                !sidebarRef.current.contains(event.target as Node)
+                (sidebarRef.current && sidebarRef.current.contains(target)) ||
+                (buttonRef.current && buttonRef.current.contains(target))
             ) {
-                setShowSidebar(false);
+                return;
             }
+            setShowSidebar(false);
         }
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
@@ -32,7 +36,20 @@ export function NavBar({
 
     return (
         <>
-            <header className="w-full h-16 bg-bgmain shadow-md flex items-center justify-between px-4 fixed lg:hidden z-10 ">
+            <header className="w-full z-10 h-16 bg-bgmain shadow-md flex items-center gap-5 px-4 fixed lg:hidden">
+                <button
+                    ref={buttonRef}
+                    onClick={() => setShowSidebar((s) => !s)}
+                    aria-expanded={showSidebar}
+                    aria-controls="sidebar"
+                    className="p-1"
+                >
+                    <img
+                        src="/icons/menu.svg"
+                        className="w-6 hover:scale-110 hover:opacity-80 transition-all duration-300"
+                        alt="Abrir menú"
+                    />
+                </button>
                 <Link href={href}>
                     <img
                         src="/logos/Consultec.svg"
@@ -40,14 +57,6 @@ export function NavBar({
                         alt=""
                     />
                 </Link>
-                <button>
-                    <img
-                        src="/icons/menu.svg"
-                        className="w-6 hover:scale-110 hover:opacity-80 transition-all duration-300"
-                        alt=""
-                        onClick={() => setShowSidebar(!showSidebar)} // Cambia el estado de la barra lateral al hacer clic
-                    />
-                </button>
             </header>
 
             {/* Desktop NavBar */}

@@ -469,7 +469,7 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
                         </section>
 
                         {/* Escuela y catedra selects */}
-
+                        {/* 
                         <section className="flex flex-col gap-3 py-6  px-4 ">
                             <h2 className="text-lg font-semibold">Escuela</h2>
                             <select
@@ -531,7 +531,7 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
                                     </select>
                                 </>
                             )}
-                        </section>
+                        </section> */}
                     </main>
                     <footer>
                         <div className="flex justify-between items-center pt-5 pb-1 px-2 border-t-2 border-hr">

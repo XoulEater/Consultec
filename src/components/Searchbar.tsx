@@ -144,9 +144,9 @@ export function Searchbar(props: SearchbarProps) {
                 {filterLabels.map((filter, index) => (
                     <span
                         key={`filter-${index}-${filter}`}
-                        className="bg-primary text-white group relative rounded-md px-2 py-[6px] flex items-center gap-2 text-sm hover:bg-gray-500 transition-all duration-300 overflow-hidden hover:justify-center"
+                        className="bg-primary text-white group relative rounded-md px-2 py-[6px] flex items-center gap-2 text-sm hover:bg-gray-500 transition-all duration-300 overflow-hidden hover:justify-center "
                     >
-                        <div className="translate-x-0 opacity-100 transition group-hover:-translate-x-[150%] group-hover:opacity-0">
+                        <div className="translate-x-0 opacity-100 transition group-hover:-translate-x-[150%] group-hover:opacity-0 pointer-events-none">
                             {filter}
                         </div>
                         <div
