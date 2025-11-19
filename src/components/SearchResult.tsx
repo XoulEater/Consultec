@@ -103,7 +103,7 @@ export function SearchResult() {
                 <div className="w-full flex flex-col gap-2">
                     <div className="grid grid-cols-5 p-3 px-5 bg-[#F7F7F7] font-semibold rounded-t-md">
                         {/* Headers */}
-                        <div className="text-[#797979]">Impartido por</div>
+                        <div className="text-[#797979]">Contacto</div>
                         <div className="text-[#797979]">Escuela/Catedra</div>
                         <div className="text-[#797979]">Disponibilidad</div>
                         <div className="text-[#797979]">

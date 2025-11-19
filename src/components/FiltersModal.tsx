@@ -1,4 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import SubjectSelect from "./SubjectSelect";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { School, Cathedra, FilterList } from "@/lib/types";
@@ -84,6 +86,26 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
     const [selectedCampus, setSelectedCampus] = useState<string>("");
     const [selectedSubject, setSelectedSubject] = useState<string>("");
 
+    // subjects ordenados alfabéticamente para mostrar en el select
+    const sortedSubjects = React.useMemo(() => {
+        return [...subjects].sort((a, b) =>
+            a.name.localeCompare(b.name, "es", { sensitivity: "base" })
+        );
+    }, []);
+
+    // useForm control para reutilizar SubjectSelect (usa react-hook-form Controller internamente)
+    const { control, setValue } = useForm<{ subject: string }>({
+        defaultValues: { subject: selectedSubject },
+    });
+
+    // Sincronizar el valor interno del SubjectSelect con el estado selectedSubject
+    const watchedSubject = useWatch({ control, name: "subject" });
+    useEffect(() => {
+        if (watchedSubject !== undefined && watchedSubject !== selectedSubject) {
+            setSelectedSubject(watchedSubject || "");
+        }
+    }, [watchedSubject]);
+
     // Si se pasan filtros, inicializa el estado con esos filtros
     useEffect(() => {
         if (filters) {
@@ -131,6 +153,11 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
 
             if (subjectFilter) {
                 setSelectedSubject(subjectFilter.value);
+                try {
+                    setValue("subject", subjectFilter.value);
+                } catch (e) {
+                    /* setValue may not be ready, ignore */
+                }
             }
             if (schoolFilter) {
                 const schoolName = schoolFilter.value;
@@ -209,7 +236,9 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
         }
 
         if (selectedSubject) {
-            const subj = subjects.find((s) => s.code === selectedSubject);
+            const subj = subjects.find(
+                (s) => s.code === selectedSubject || s.name === selectedSubject
+            );
             filters.push({
                 name: "subject",
                 value: selectedSubject,
@@ -386,10 +415,10 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
                             </div>
                         </section>
 
-                        {/* Impartido Por */}
+                        {/* Impartido por */}
                         <section className="flex flex-col gap-3 py-6 border-b-2 px-4 border-hr">
                             <h2 className="text-lg font-semibold">
-                                Impartido Por
+                                Impartido por
                             </h2>
                             <ul className="grid w-full gap-3 md:grid-cols-3">
                                 <li>
@@ -510,18 +539,16 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
                         {/* Curso select */}
                         <section className="flex flex-col gap-3 py-6 border-b-2 px-4 border-hr">
                             <h2 className="text-lg font-semibold">Curso</h2>
-                            <select
-                                className="w-full lg:w-1/2 p-3 text-gray-500 bg-bgmain border border-hr rounded-lg cursor-pointer focus:outline-primary"
-                                value={selectedSubject}
-                                onChange={(e) => setSelectedSubject(e.target.value)}
-                            >
-                                <option value="">Selecciona un curso</option>
-                                {subjects.map((s) => (
-                                    <option key={`subject-${s.code}`} value={s.code}>
-                                        {s.name}
-                                    </option>
-                                ))}
-                            </select>
+                            <div className="w-full lg:w-1/2">
+                                <SubjectSelect
+                                    control={control as any}
+                                    name={"subject" as any}
+                                    subjects={sortedSubjects}
+                                    label={"Curso:"}
+                                    rules={{}}
+                
+                                />
+                            </div>
                         </section>
 
                         <section className="flex flex-col gap-3 py-6 border-b-2 px-4 border-hr">

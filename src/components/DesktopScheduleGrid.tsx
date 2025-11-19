@@ -76,8 +76,10 @@ export function DesktopScheduleGrid({
                                         : schedule.type === "class"
                                         ? "bg-green-400/80 border-green-300/90"
                                         : schedule.type === "telecommuting"
-                                        ? "bg-rose-400/80 border-rose-300/90"
-                                        : "bg-gray-400/80 border-gray-300/90"
+                                        ? "bg-yellow-400/80 border-yellow-300/90"
+                                        : schedule.type === "extern"
+                                        ? "bg-gray-400/80 border-gray-300/90"
+                                        : "bg-red-400/80 border-red-300/90"
                                 } m-[2px] text-white p-2 text-xs border-l-8 rounded-xs absolute cursor-pointer drop-shadow-md `}
                                 style={{
                                     top,
