@@ -20,15 +20,16 @@ export default function PasswordRecovery() {
                         <span className="absolute h-56 w-56 rounded-full bg-gradient  transition-all duration-300 group-hover:h-0 group-hover:w-0"></span>
                     </div>
                     <h1 className="text-2xl font-bold text-main text-center">
-                        Recupera tu contraseña en {" "}
+                        Recupera tu contraseña en{" "}
                         <img
                             className="inline-block h-7 pb-1"
-                            src="/logos/consultec.svg"
+                            src="/logos/Consultec.svg"
                             alt=""
                         />
                     </h1>
                     <p className="text-sm text-dim text-center max-w-[300px] w-3/4">
-                        Ingresa tu correo electrónico para recibir un enlace de recuperación.
+                        Ingresa tu correo electrónico para recibir un enlace de
+                        recuperación.
                     </p>
 
                     <PasswordRecoveryForm />

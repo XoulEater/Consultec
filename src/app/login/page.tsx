@@ -23,7 +23,7 @@ export default function Login() {
                         Inicia sesión en{" "}
                         <img
                             className="inline-block h-7 pb-1"
-                            src="/logos/consultec.svg"
+                            src="/logos/Consultec.svg"
                             alt=""
                         />
                     </h1>

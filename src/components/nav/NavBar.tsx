@@ -35,7 +35,7 @@ export function NavBar({
             <header className="w-full h-16 bg-bgmain shadow-md flex items-center justify-between px-4 fixed lg:hidden z-10 ">
                 <Link href={href}>
                     <img
-                        src="/logos/consultec.svg"
+                        src="/logos/Consultec.svg"
                         className="h-8 cursor-pointer hover:scale-110 transition-all duration-300"
                         alt=""
                     />
