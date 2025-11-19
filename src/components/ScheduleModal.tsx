@@ -7,6 +7,7 @@ const translateType = {
     consultation: "Consulta",
     telecommuting: "Teletrabajo",
     extern: "Externo",
+    other: "Otro",
 };
 
 type Props = {
@@ -51,7 +52,9 @@ function ScheduleModal({ onClose, onOk, schedule }: Props) {
                             ? "border-green-400/90"
                             : schedule.type === "telecommuting"
                             ? "border-rose-400/90"
-                            : "border-gray-400/90"
+                            : schedule.type === "extern"
+                            ? "border-gray-400/90"
+                            : "border-red-400/90"
                     } rounded-md ring-black/10 ring-2  flex flex-col gap-6  w-full max-w-lg`}
             >
                 <header className="text-xl font-medium flex justify-between items-start">

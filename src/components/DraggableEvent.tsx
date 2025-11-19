@@ -83,7 +83,9 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
                     ? "bg-green-400/80 border-green-300/90"
                     : event.type === "telecommuting"
                     ? "bg-yellow-500/80 border-yellow-400/90"
-                    : "bg-gray-400/80 border-gray-300/90"
+                    : event.type === "extern"
+                    ? "bg-gray-400/80 border-gray-300/90"
+                    : "bg-red-400/80 border-red-300/90"
             } ${event.disabled && " pointer-events-none"} 
                 border-l-8 rounded-l-x
              rounded-sm shadow-md cursor-grab flex flex-col justify-between`}

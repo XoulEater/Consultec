@@ -17,7 +17,7 @@ export type Cathedra = {
 
 export type Schedule = {
     _id: string;
-    type: "consultation" | "class" | "telecommuting" | "extern";
+    type: "consultation" | "class" | "telecommuting" | "extern" | "other";
     subject: string;
     name?: string;
     day: number;
@@ -31,7 +31,7 @@ export type Schedule = {
 };
 
 export type SednableSchedule = {
-    type: "consultation" | "class" | "telecommuting" | "extern";
+    type: "consultation" | "class" | "telecommuting" | "extern" | "other";
     subject: string;
     name?: string;
     day: number;
@@ -46,7 +46,7 @@ export type SednableSchedule = {
 
 export type ScheduleDetail = {
     _id: string;
-    type: "consultation" | "class" | "telecommuting" | "extern";
+    type: "consultation" | "class" | "telecommuting" | "extern" | "other";
     curso: string | null;
     horaInicio: string;
     horaFin: string;

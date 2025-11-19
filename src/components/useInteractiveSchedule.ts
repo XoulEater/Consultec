@@ -80,7 +80,7 @@ export function useInteractiveScheduleLogic({ schedule }: props) {
                 source.type === "class" || source.type === "consultation"
                     ? source.subject || "Materia"
                     : "",
-            type: ["class", "consultation", "telecommuting", "other"].includes(
+            type: ["class", "consultation", "telecommuting", "other", "extern"].includes(
                 source.type as string
             )
                 ? (source.type as Schedule["type"])
@@ -225,6 +225,7 @@ export function useInteractiveScheduleLogic({ schedule }: props) {
                                   "consultation",
                                   "telecommuting",
                                   "extern",
+                                  "other",
                               ].includes(data.type)
                                   ? data.type
                                   : "class") as Schedule["type"],
@@ -244,6 +245,7 @@ export function useInteractiveScheduleLogic({ schedule }: props) {
                     "consultation",
                     "telecommuting",
                     "extern",
+                    "other",
                 ].includes(data.type)
                     ? data.type
                     : "class") as Schedule["type"],

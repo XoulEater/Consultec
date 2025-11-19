@@ -30,13 +30,15 @@ export function MobileScheduleList({
                                         key={schedule._id}
                                         className={`p-3 rounded border-l-4 shadow cursor-pointer transition hover:bg-neutral-100 ${
                                             schedule.type === "consultation"
-                                                ? "bg-primary/80 border-blue-400/90"
-                                                : schedule.type === "class"
-                                                ? "bg-green-400/80 border-green-300/90"
-                                                : schedule.type ===
-                                                  "telecommuting"
-                                                ? "bg-rose-400/80 border-rose-300/90"
-                                                : "bg-gray-400/80 border-gray-300/90"
+                                                    ? "bg-primary/80 border-blue-400/90"
+                                                    : schedule.type === "class"
+                                                    ? "bg-green-400/80 border-green-300/90"
+                                                    : schedule.type ===
+                                                        "telecommuting"
+                                                    ? "bg-rose-400/80 border-rose-300/90"
+                                                    : schedule.type === "extern"
+                                                    ? "bg-gray-400/80 border-gray-300/90"
+                                                    : "bg-red-400/80 border-red-300/90"
                                         }`}
                                         onClick={() => onEventClick(schedule)}
                                     >

@@ -4,7 +4,8 @@ const nextConfig = {
         return [
             {
                 source: "/api/:path*",
-                destination: "https://consultec-backend.vercel.app/api/:path*", // Proxy to Backend
+                //destination: "https://consultec-backend.vercel.app/api/:path*", // Proxy to Backend
+                destination: "http://localhost:3001/api/:path*", // Proxy to Backend
             },
         ];
     },
