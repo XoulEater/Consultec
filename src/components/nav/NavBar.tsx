@@ -36,7 +36,7 @@ export function NavBar({
 
     return (
         <>
-            <header className="w-full z-10 h-16 bg-bgmain shadow-md flex items-center gap-5 px-4 fixed lg:hidden">
+            <header className="w-full  z-10 h-16 bg-bgmain shadow-md flex items-center gap-5 px-4 fixed lg:hidden">
                 <button
                     ref={buttonRef}
                     onClick={() => setShowSidebar((s) => !s)}
@@ -63,9 +63,9 @@ export function NavBar({
 
             <div
                 ref={sidebarRef}
-                className={`border-r border-hr flex-col items-center top-0 -left-[300px] lg:mt-0 mt-16  gap-6 lg:p-6 p-2 fixed lg:flex lg:static ${
+                className={`border-r min-w-[300px] border-hr flex-col items-center top-0 -left-[300px] lg:mt-0 mt-16  gap-6 lg:p-6 p-2 fixed lg:flex lg:static ${
                     showSidebar ? "translate-x-[300px]" : ""
-                } transition-transform dura tion-300 ease-in-out h-screen bg-bgmain shadow-md lg:z-0 z-20`}
+                } transition-transform duration-300 ease-in-out h-screen bg-bgmain shadow-md lg:z-0 z-20`}
             >
                 <Link href={href} className="hidden lg:flex">
                     <img

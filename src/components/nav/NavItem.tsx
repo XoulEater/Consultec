@@ -7,11 +7,18 @@ import React, { useState } from "react";
 export type NavItemProps = {
     title: string;
     icon: string;
-    href: string;
+    href?: string;
+    onClick?: () => void;
     children?: NavItemProps[];
 };
 
-export default function NavItem({ title, icon, href, children }: NavItemProps) {
+export default function NavItem({
+    title,
+    icon,
+    href,
+    onClick,
+    children,
+}: NavItemProps) {
     const router = useRouter();
     const pathname = usePathname();
     const [open, setOpen] = useState(false);
@@ -20,11 +27,18 @@ export default function NavItem({ title, icon, href, children }: NavItemProps) {
         if (children && children.length > 0) {
             setOpen((prev) => !prev);
         } else {
-            router.push(href);
+            if (onClick) {
+                onClick();
+            }
+            if (href) {
+                router.push(href);
+            }
         }
     };
-
-    const isActive = pathname.includes(href);
+    if (!href && (!children || children.length === 0) && !onClick) {
+        return null;
+    }
+    const isActive = href ? pathname.includes(href) : false;
 
     return (
         <div className="w-full">

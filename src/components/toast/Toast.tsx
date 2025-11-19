@@ -60,7 +60,7 @@ export default function Toast() {
                         fill="none"
                         stroke="#ffffff"
                         strokeWidth="2"
-                        stroke-linecap="round"
+                        strokeLinecap="round"
                         stroke-linejoin="round"
                     >
                         <path d="M5 12l5 5l10 -10" />
@@ -76,7 +76,7 @@ export default function Toast() {
                         fill="none"
                         stroke="#ffffff"
                         strokeWidth="2"
-                        stroke-linecap="round"
+                        strokeLinecap="round"
                         stroke-linejoin="round"
                     >
                         <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
@@ -94,7 +94,7 @@ export default function Toast() {
                         fill="none"
                         stroke="#ffffff"
                         strokeWidth="2"
-                        stroke-linecap="round"
+                        strokeLinecap="round"
                         stroke-linejoin="round"
                     >
                         <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
@@ -112,7 +112,7 @@ export default function Toast() {
                         fill="none"
                         stroke="#000000"
                         strokeWidth="2"
-                        stroke-linecap="round"
+                        strokeLinecap="round"
                         stroke-linejoin="round"
                     >
                         <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />

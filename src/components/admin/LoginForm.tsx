@@ -145,7 +145,7 @@ export default function LoginForm() {
                                 fill="none"
                                 stroke="#898989"
                                 strokeWidth="1"
-                                stroke-linecap="round"
+                                strokeLinecap="round"
                                 stroke-linejoin="round"
                             >
                                 <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
@@ -162,7 +162,7 @@ export default function LoginForm() {
                                 fill="none"
                                 stroke="#898989"
                                 strokeWidth="1"
-                                stroke-linecap="round"
+                                strokeLinecap="round"
                                 stroke-linejoin="round"
                             >
                                 <path d="M21 9c-2.4 2.667 -5.4 4 -9 4c-3.6 0 -6.6 -1.333 -9 -4" />
@@ -188,7 +188,7 @@ export default function LoginForm() {
             <div className="w-full flex justify-center">
                 <button
                     type="button"
-                    onClick={() => router.push('/passwordRecovery')}
+                    onClick={() => router.push("/passwordRecovery")}
                     className="text-sm text-dim underline hover:text-main"
                 >
                     ¿Olvidó su contraseña?

@@ -31,7 +31,6 @@ const campus = [
     { id: 5, name: "Limón" },
 ];
 
-
 const subjects = [
     {
         code: "EM1600",
@@ -101,7 +100,10 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
     // Sincronizar el valor interno del SubjectSelect con el estado selectedSubject
     const watchedSubject = useWatch({ control, name: "subject" });
     useEffect(() => {
-        if (watchedSubject !== undefined && watchedSubject !== selectedSubject) {
+        if (
+            watchedSubject !== undefined &&
+            watchedSubject !== selectedSubject
+        ) {
             setSelectedSubject(watchedSubject || "");
         }
     }, [watchedSubject]);
@@ -539,14 +541,13 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
                         {/* Curso select */}
                         <section className="flex flex-col gap-3 py-6 border-b-2 px-4 border-hr">
                             <h2 className="text-lg font-semibold">Curso</h2>
-                            <div className="w-full lg:w-1/2">
+                            <div className="w-full lg:w-2/3">
                                 <SubjectSelect
                                     control={control as any}
                                     name={"subject" as any}
                                     subjects={sortedSubjects}
-                                    label={"Curso:"}
+                                    showLabel={false}
                                     rules={{}}
-                
                                 />
                             </div>
                         </section>
@@ -554,7 +555,7 @@ export default function FiltersModal({ onClose, onOk, filters }: Props) {
                         <section className="flex flex-col gap-3 py-6 border-b-2 px-4 border-hr">
                             <h2 className="text-lg font-semibold">Campus</h2>
                             <select
-                                className="w-full lg:w-1/2 p-3 text-gray-500 bg-bgmain border border-hr rounded-lg cursor-pointer focus:outline-primary"
+                                className="w-full lg:w-2/3 p-3 text-gray-500 bg-bgmain border border-hr rounded-lg cursor-pointer focus:outline-primary"
                                 value={selectedCampus}
                                 onChange={(e) =>
                                     setSelectedCampus(e.target.value)

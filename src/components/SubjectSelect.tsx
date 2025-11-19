@@ -12,6 +12,7 @@ interface SubjectSelectProps {
     name: keyof Schedule;
     subjects: Subject[];
     label?: string;
+    showLabel?: boolean;
     rules?: any;
 }
 
@@ -20,6 +21,7 @@ const SubjectSelect: React.FC<SubjectSelectProps> = ({
     name,
     subjects,
     label = "Materia:",
+    showLabel = true,
     rules,
 }) => {
     const [query, setQuery] = useState("");
@@ -75,9 +77,11 @@ const SubjectSelect: React.FC<SubjectSelectProps> = ({
 
                 return (
                     <div className="block" ref={containerRef}>
-                        <label className="block">
-                            <span className="text-dim">{label}</span>
-                        </label>
+                        {showLabel && (
+                            <label className="block">
+                                <span className="text-dim">{label}</span>
+                            </label>
+                        )}
                         <div className="relative">
                             <button
                                 type="button"

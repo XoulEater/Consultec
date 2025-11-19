@@ -12,14 +12,14 @@ import { useDispatch } from "react-redux";
 import { showToast } from "@/store/toastSlice";
 import TeacherContactModal from "@/components/TeacherContactModal";
 
-
 export default function Home() {
     const [teachers, setTeachers] = useState<TeachersTable[] | undefined>();
     const [searchParams, setSearchParams] = useState<string | undefined>();
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const [selectedContact, setSelectedContact] = useState<TeacherContactInfo | null>(null);
-    const { getToken } = useAuth(); 
+    const [selectedContact, setSelectedContact] =
+        useState<TeacherContactInfo | null>(null);
+    const { getToken } = useAuth();
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -52,18 +52,31 @@ export default function Home() {
             const teacherId = localStorage.getItem("teacherId");
             if (!teacherId) {
                 dispatch(
-                    showToast({ message: "No hay un profesor guardado en la sesión.", type: "error" })
+                    showToast({
+                        message: "No hay un profesor guardado en la sesión.",
+                        type: "error",
+                    })
                 );
                 return;
             }
 
             const token = await getToken({ template: "Consultec" });
             await getExcelByTeacherId(teacherId, token);
-            dispatch(showToast({ message: "Excel descargado correctamente.", type: "success" }));
+            dispatch(
+                showToast({
+                    message: "Excel descargado correctamente.",
+                    type: "success",
+                })
+            );
             console.log("Excel downloaded successfully");
         } catch (error) {
             console.error("Error downloading Excel:", error);
-            dispatch(showToast({ message: "Error al descargar el Excel.", type: "error" }));
+            dispatch(
+                showToast({
+                    message: "Error al descargar el Excel.",
+                    type: "error",
+                })
+            );
         }
     };
     return (
@@ -79,21 +92,12 @@ export default function Home() {
                     <header className="flex flex-col gap-4 lg:flex-row justify-between items-start ">
                         <Searchbar />
                         <div className="flex flex-row gap-4">
-                            <button className="bg-gradient text-white px-4 py-2 rounded-md flex flex-row items-center gap-2 hover:scale-105 transition-all duration-300">
-                                <img src="/icons/addschedule.svg" alt="add" />
-                                <span>Nuevo Horario</span>
-                            </button>
-                            <button
-                                className="bg-gradient text-white px-4 py-2 rounded-md flex flex-row items-center gap-2 hover:scale-105 transition-all duration-300"
-                                onClick={handleDownloadExcel}
-                            >
-                                <img src="/icons/download.svg" alt="add" />
-                                <span>Descargar Horario</span>
-                            </button>
                             <SignOutButton>
                                 <button
                                     className="bg-gradient text-white px-4 py-2 rounded-md flex flex-row items-center gap-2 hover:scale-105 transition-all duration-300"
-                                    onClick={() => localStorage.removeItem("teacherId")}
+                                    onClick={() =>
+                                        localStorage.removeItem("teacherId")
+                                    }
                                 >
                                     Cerrar sesión
                                 </button>
@@ -116,7 +120,8 @@ export default function Home() {
                     <TeacherContactModal
                         onClose={() => setSelectedContact(null)}
                         contact={selectedContact}
-                    />)}
+                    />
+                )}
             </SearchParamsWrapper>
         </Suspense>
     );
