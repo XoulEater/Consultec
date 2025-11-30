@@ -37,6 +37,29 @@ export default function LayoutB({ children }: { children: React.ReactNode }) {
         }
     }, [isSignedIn, user]);
 
+    // Forzar recarga de la ruta cuando la página es restaurada desde bfcache.
+    useEffect(() => {
+        const onPageShow = (e: PageTransitionEvent | any) => {
+            if (e && e.persisted) {
+                console.log("admin pageshow persisted -> refreshing route");
+                router.replace(router.asPath);
+            }
+        };
+
+        const onPopState = () => {
+            console.log("admin popstate -> refreshing route");
+            router.replace(router.asPath);
+        };
+
+        window.addEventListener("pageshow", onPageShow);
+        window.addEventListener("popstate", onPopState);
+
+        return () => {
+            window.removeEventListener("pageshow", onPageShow);
+            window.removeEventListener("popstate", onPopState);
+        };
+    }, [router]);
+
     if (!isSignedIn && isLoaded) return null;
 
     const handleDownloadExcel = async () => {
