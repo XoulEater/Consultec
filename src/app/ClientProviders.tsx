@@ -25,18 +25,17 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ReactNode } from "react";
 
 interface Props {
-  children: ReactNode;
+    children: ReactNode;
 }
 
+// FIXME: remove this after deploying
 export default function ClientProviders({ children }: Props) {
-  return (
-    <ClerkProvider>
-      <Provider store={store}>
-        <Toast />
-        {children}
-      </Provider>
-    </ClerkProvider>
-  );
+    return (
+        <ClerkProvider>
+            <Provider store={store}>
+                <Toast />
+                {children}
+            </Provider>
+        </ClerkProvider>
+    );
 }
-
-
