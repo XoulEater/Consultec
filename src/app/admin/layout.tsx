@@ -42,13 +42,13 @@ export default function LayoutB({ children }: { children: React.ReactNode }) {
         const onPageShow = (e: PageTransitionEvent | any) => {
             if (e && e.persisted) {
                 console.log("admin pageshow persisted -> refreshing route");
-                router.replace(router.asPath);
+                router.replace(window.location.pathname);
             }
         };
 
         const onPopState = () => {
             console.log("admin popstate -> refreshing route");
-            router.replace(router.asPath);
+            router.replace(window.location.pathname);
         };
 
         window.addEventListener("pageshow", onPageShow);
