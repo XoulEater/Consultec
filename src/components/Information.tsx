@@ -403,16 +403,7 @@ export function Information() {
                             {saving ? "Guardando..." : "Guardar"}
                         </span>
                     </button>
-                    <SignOutButton>
-                        <button
-                            className="px-4 py-2 bg-primary text-white rounded-md flex items-center hover:bg-primary/80 gap-2 transition-all duration-300 disabled:opacity-50"
-                            onClick={async () => {
-                                await handleDeleteAndLogout();
-                            }}
-                        >
-                            Eliminar
-                        </button>
-                    </SignOutButton>
+                    
                 </div>
             </div>
         </div>
