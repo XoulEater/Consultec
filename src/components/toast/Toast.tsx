@@ -61,7 +61,7 @@ export default function Toast() {
                         stroke="#ffffff"
                         strokeWidth="2"
                         strokeLinecap="round"
-                        stroke-linejoin="round"
+                        strokeLinejoin="round"
                     >
                         <path d="M5 12l5 5l10 -10" />
                     </svg>
@@ -77,7 +77,7 @@ export default function Toast() {
                         stroke="#ffffff"
                         strokeWidth="2"
                         strokeLinecap="round"
-                        stroke-linejoin="round"
+                        strokeLinejoin="round"
                     >
                         <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
                         <path d="M12 9v4" />
@@ -95,7 +95,7 @@ export default function Toast() {
                         stroke="#ffffff"
                         strokeWidth="2"
                         strokeLinecap="round"
-                        stroke-linejoin="round"
+                        strokeLinejoin="round"
                     >
                         <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
                         <path d="M12 9h.01" />
@@ -113,7 +113,7 @@ export default function Toast() {
                         stroke="#000000"
                         strokeWidth="2"
                         strokeLinecap="round"
-                        stroke-linejoin="round"
+                        strokeLinejoin="round"
                     >
                         <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
                         <path d="M12 9h.01" />

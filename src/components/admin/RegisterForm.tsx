@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSignUp } from "@clerk/nextjs";
-import { getTeacherByEmail, createTeacher } from "@/services/teacher.service";
+import { getTeacherByEmail } from "@/services/teacher.service";
 
 export default function RegisterForm() {
     const dispatch = useDispatch();
@@ -23,54 +23,72 @@ export default function RegisterForm() {
         if (!isLoaded) return; 
 
         try {
-            // Registrar usuario con Clerk
-            const result = await signUp.create({
-                emailAddress: data.email,
-                password: data.password,
-            });
-
-            if (result.status === "complete") {
-                await setActive({ session: result.createdSessionId });
-                dispatch(
-                    showToast({
-                        message: "Registro exitoso",
-                        type: "success",
-                    })
-                );
-                // Buscar el id del teacher y guardarlo en localStorage
-               try {
-                   const teacher = await getTeacherByEmail(data.email);
-                   if (teacher?._id) {
-                       localStorage.setItem("teacherId", teacher._id);
-                   }
-               } catch (err: any) {
-                   if (err.response?.status === 404) {
-
-                        const nuevoTeacher = await createTeacher({ correo: data.email }) as { _id: string };
-                       if (nuevoTeacher?._id) {
-                           localStorage.setItem("teacherId", nuevoTeacher._id);
-                       }
-                    } else {
-                        console.error("Error inesperado al registrar teacher", err);
-                    }
-                }
-                router.push("/login");
-            } else {
-                dispatch(
-                    showToast({
-                        message: "Se requiere verificación adicional",
-                        type: "info",
-                    })
-                );
-            }
-        } catch (err: any) {
-            console.error("Error en registro", err.errors);
-            dispatch(
+          // Primero: comprobar que existe un teacher con ese correo
+          let teacher: any = null;
+          try {
+            teacher = await getTeacherByEmail(data.email);
+          } catch (err: any) {
+            if (err.response?.status === 404) {
+              dispatch(
                 showToast({
-                    message: err.errors?.[0]?.message || "Error en el registro",
-                    type: "error",
+                  message: "No existe un profesor con ese correo",
+                  type: "error",
                 })
+              );
+              return;
+            }
+            throw err;
+          }
+
+          // Si existe el teacher, intentamos crear el usuario en Clerk
+          const result = await signUp.create({
+            emailAddress: data.email,
+            password: data.password,
+          });
+
+          if (result.status === "complete") {
+            await setActive({ session: result.createdSessionId });
+            dispatch(
+              showToast({
+                message: "Registro exitoso",
+                type: "success",
+              })
             );
+
+            if (teacher?._id) {
+              localStorage.setItem("teacherId", teacher._id);
+            }
+
+            router.push("/login");
+          } else {
+            dispatch(
+              showToast({
+                message: "Se requiere verificación adicional",
+                type: "info",
+              })
+            );
+          }
+        } catch (err: any) {
+          // Si el error indica que el usuario ya existe en Clerk, redirigimos al login
+          const errMsg = (err?.errors?.[0]?.message || err?.message || "").toString().toLowerCase();
+          if (errMsg.includes("already") || errMsg.includes("exists") || errMsg.includes("exist")) {
+            dispatch(
+              showToast({
+                message: "El usuario ya existe. Redirigiendo al login...",
+                type: "info",
+              })
+            );
+            router.push("/login");
+            return;
+          }
+
+          console.error("Error en registro", err?.errors || err);
+          dispatch(
+            showToast({
+              message: err?.errors?.[0]?.message || "Error en el registro",
+              type: "error",
+            })
+          );
         }
     };
 
