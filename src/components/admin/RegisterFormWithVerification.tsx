@@ -170,8 +170,8 @@ export default function RegisterFormWithVerification() {
             console.log("[RegisterFormWithVerification] attempt result", signUpAttempt);
 
             const needsPassword =
-                signUpAttempt?.status === "needs_password" ||
-                (signUpAttempt?.status === "missing_requirements" &&
+                (signUpAttempt?.status as string) === "needs_password" ||
+                ((signUpAttempt?.status as string) === "missing_requirements" &&
                     Array.isArray(signUpAttempt?.missingFields) &&
                     signUpAttempt.missingFields.includes("password"));
 
