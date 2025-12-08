@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { SignOutButton } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { showToast } from "@/store/toastSlice";
 import TeacherContactModal from "@/components/TeacherContactModal";
@@ -21,6 +22,7 @@ export default function Home() {
         useState<TeacherContactInfo | null>(null);
     const { getToken } = useAuth();
     const dispatch = useDispatch();
+    const router = useRouter();
 
     useEffect(() => {
         const fetchTeachers = async () => {
@@ -92,12 +94,16 @@ export default function Home() {
                     <header className="flex flex-col gap-4 lg:flex-row justify-between items-start ">
                         <Searchbar />
                         <div className="flex flex-row gap-4">
-                            <SignOutButton>
+                            <SignOutButton
+                                redirectUrl="/login"
+                                afterSignOutUrl="/login"
+                                signOutCallback={() => {
+                                    localStorage.removeItem("teacherId");
+                                    router.push("/login");
+                                }}
+                            >
                                 <button
                                     className="bg-gradient text-white px-4 py-2 rounded-md flex flex-row items-center gap-2 hover:scale-105 transition-all duration-300"
-                                    onClick={() =>
-                                        localStorage.removeItem("teacherId")
-                                    }
                                 >
                                     Cerrar sesión
                                 </button>
