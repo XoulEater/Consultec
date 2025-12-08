@@ -96,14 +96,13 @@ export default function Home() {
                         <div className="flex flex-row gap-4">
                             <SignOutButton
                                 redirectUrl="/login"
-                                afterSignOutUrl="/login"
-                                signOutCallback={() => {
-                                    localStorage.removeItem("teacherId");
-                                    router.push("/login");
-                                }}
                             >
                                 <button
                                     className="bg-gradient text-white px-4 py-2 rounded-md flex flex-row items-center gap-2 hover:scale-105 transition-all duration-300"
+                                    onClick={() => {
+                                        localStorage.removeItem("teacherId");
+                                        router.push("/login");
+                                    }}
                                 >
                                     Cerrar sesión
                                 </button>
