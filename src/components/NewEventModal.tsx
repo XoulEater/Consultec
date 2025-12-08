@@ -10,7 +10,6 @@ const tabs = [
     { key: "telecommuting", label: "Teletrabajo" },
     { key: "other", label: "Otro" },
     { key: "extern", label: "Externo" },
-
 ];
 
 interface NewEventModalProps {
@@ -185,7 +184,7 @@ const NewEventModal: React.FC<NewEventModalProps> = ({
         <>
             <div className="fixed inset-0 bg-black/20 z-50" onClick={onClose} />
             <form
-                className={`fixed bg-bgmain rounded shadow-md w-[390px] flex flex-col gap-2 z-50 border-t-4 ${
+                className={`fixed bg-bgmain rounded shadow-md w-[480px] flex flex-col gap-2 z-50 border-t-4 ${
                     currentType === "class"
                         ? "border-green-500"
                         : currentType === "consultation"
@@ -206,7 +205,10 @@ const NewEventModal: React.FC<NewEventModalProps> = ({
                 }}
                 onSubmit={handleSubmit((data) => {
                     // Al enviar, si el tipo es extern u other, guardar name en subject
-                    if ((data.type === "extern" || data.type === "other") && data.name) {
+                    if (
+                        (data.type === "extern" || data.type === "other") &&
+                        data.name
+                    ) {
                         data.subject = data.name;
                     }
                     onSubmit(data);

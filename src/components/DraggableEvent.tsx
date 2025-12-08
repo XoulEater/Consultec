@@ -4,6 +4,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Schedule, codeToName } from "@/lib/types";
 
 interface DraggableEventProps {
+    visible?: boolean;
     event: Schedule;
     onResize: (e: React.MouseEvent, delta: number) => void;
     onDelete: (id: string) => void;
@@ -14,6 +15,7 @@ interface DraggableEventProps {
 const intervalHeight = 26;
 
 const DraggableEvent: React.FC<DraggableEventProps> = ({
+    visible = true,
     event,
     onResize,
     onDelete,
@@ -88,7 +90,9 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
                     : "bg-red-400/80 border-red-300/90"
             } ${event.disabled && " pointer-events-none"} 
                 border-l-8 rounded-l-x
-             rounded-sm shadow-md cursor-grab flex flex-col justify-between`}
+             rounded-sm shadow-md cursor-grab flex flex-col justify-between ${
+                 !visible && "opacity-0"
+             }`}
         >
             <div className="relative h-full flex flex-col">
                 <div className="justify-between flex pr-1">

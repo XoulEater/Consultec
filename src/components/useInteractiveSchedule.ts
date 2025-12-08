@@ -58,9 +58,16 @@ export function useInteractiveScheduleLogic({ schedule }: props) {
     useEffect(() => {
         // Solo actualizar si la longitud o el contenido realmente cambió
         if (
-            events.length !== schedule.length ||
-            JSON.stringify(events) !== JSON.stringify(schedule)
+            schedule &&
+            schedule.length >= 0 &&
+            (events.length !== schedule.length ||
+                JSON.stringify(events) !== JSON.stringify(schedule))
         ) {
+            console.log(
+                "Updating events from schedule:",
+                schedule.length,
+                "items"
+            );
             setEvents(schedule);
         }
     }, [schedule]);
@@ -80,9 +87,13 @@ export function useInteractiveScheduleLogic({ schedule }: props) {
                 source.type === "class" || source.type === "consultation"
                     ? source.subject || "Materia"
                     : "",
-            type: ["class", "consultation", "telecommuting", "other", "extern"].includes(
-                source.type as string
-            )
+            type: [
+                "class",
+                "consultation",
+                "telecommuting",
+                "other",
+                "extern",
+            ].includes(source.type as string)
                 ? (source.type as Schedule["type"])
                 : "class",
             location: source.location ?? "",
@@ -161,7 +172,7 @@ export function useInteractiveScheduleLogic({ schedule }: props) {
         e: React.MouseEvent<HTMLDivElement>
     ) {
         const rect = e.currentTarget.getBoundingClientRect();
-        const side = dayIndex >= 3 ? rect.left - 405 : rect.right;
+        const side = dayIndex >= 3 ? rect.left - 493 : rect.right - 7;
         let y =
             rect.top +
             (e.clientY - rect.top) -
@@ -292,7 +303,7 @@ export function useInteractiveScheduleLogic({ schedule }: props) {
                 const rect = el.getBoundingClientRect();
                 // Usar la misma lógica de lado que en handleGridClick
                 const dayIndex = ev.day;
-                const side = dayIndex >= 3 ? rect.left - 405 : rect.right;
+                const side = dayIndex >= 3 ? rect.left - 496 : rect.right - 3;
                 const x = Math.min(side, window.innerWidth - 320);
                 let y = rect.top;
                 console.log(
@@ -385,6 +396,7 @@ export function useInteractiveScheduleLogic({ schedule }: props) {
         handleDeleteEvent,
         handleEditEvent,
         handleDuplicateEvent,
+        setEditEventId,
         days,
         startour,
         endHour,

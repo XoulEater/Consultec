@@ -37,6 +37,7 @@ export default function InteractiveSchedule({
         handleEditEvent,
         editEventId,
         setTempForm,
+        setEditEventId,
     } = useInteractiveScheduleLogic({ schedule });
 
     useEffect(() => {
@@ -64,7 +65,10 @@ export default function InteractiveSchedule({
                             ? events.find((ev) => ev._id === editEventId)
                             : undefined
                     }
-                    onClose={() => setShowNewEventModal(false)}
+                    onClose={() => {
+                        setShowNewEventModal(false);
+                        setEditEventId(null);
+                    }}
                     onSubmit={(data) => handleNewEventSubmit(data)}
                     onFormChange={setTempForm}
                     intervals={intervals}
@@ -145,6 +149,7 @@ export default function InteractiveSchedule({
                             .filter((ev) => ev.day === dayIndex)
                             .map((ev) => (
                                 <DraggableEvent
+                                    visible={editEventId !== ev._id}
                                     key={ev._id}
                                     event={ev}
                                     onResize={(e, delta) =>
