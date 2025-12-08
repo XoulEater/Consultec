@@ -59,7 +59,7 @@ function ScheduleModal({ onClose, onOk, schedule }: Props) {
             >
                 <header className="text-xl font-medium flex justify-between items-start">
                     <span>{`${translateType[schedule.type]}: ${
-                        codeToName[schedule.subject]
+                        codeToName[schedule.subject] || schedule.subject
                     }`}</span>
                     <button
                         className="cursor-pointer"
