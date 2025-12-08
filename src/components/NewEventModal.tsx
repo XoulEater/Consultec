@@ -243,18 +243,20 @@ const NewEventModal: React.FC<NewEventModalProps> = ({
                     ))}
                 </div>
                 <section className="flex flex-col gap-2 p-4 max-h-[400px] ">
-                    {/* Common fields */}
-
-                    <label>
-                        <span className="text-dim">Nombre:</span>
-                        <input
-                            type="text"
-                            placeholder="Nombre del evento"
-                            required
-                            {...register("name")}
-                            className="w-full text-white border-1 rounded-lg border-hr focus:outline-secondary p-1"
-                        />
-                    </label>
+                    {/* MARK: Common fields */}
+                    {currentType !== "consultation" &&
+                        currentType !== "class" && (
+                            <label>
+                                <span className="text-dim">Nombre:</span>
+                                <input
+                                    type="text"
+                                    placeholder="Nombre del evento"
+                                    required
+                                    {...register("name")}
+                                    className="w-full text-white border-1 rounded-lg border-hr focus:outline-secondary p-1"
+                                />
+                            </label>
+                        )}
                     {(currentType === "consultation" ||
                         currentType === "class") && (
                         <SubjectSelect
