@@ -1,6 +1,6 @@
-import RegisterFormWithVerification from "@/components/admin/RegisterFormWithVerification";
+import RegisterForm from "@/components/admin/RegisterForm";
 
-export default function RegisterWithVerification() {
+export default function Register() {
     return (
         <div className="flex flex-col items-center justify-center h-screen overflow-hidden bg-[#1e2021] ">
             <aside className="w-full  h-2/3 z-10 absolute top-0 sm:hidden  flex items-end flex-col bg-[url(/pattern.png)] bg-repeat-around bg-cover  overflow-hidden">
@@ -31,7 +31,7 @@ export default function RegisterWithVerification() {
                         Bienvenido a la plataforma que unifica todas las
                         consultas
                     </p>
-                    <RegisterFormWithVerification />
+                    <RegisterForm />
                 </section>
             </main>
         </div>

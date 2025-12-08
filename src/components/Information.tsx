@@ -403,7 +403,6 @@ export function Information() {
                             {saving ? "Guardando..." : "Guardar"}
                         </span>
                     </button>
-                    
                 </div>
             </div>
         </div>
